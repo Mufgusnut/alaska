@@ -164,6 +164,10 @@ footer{padding-block:30px 44px;border-top:1px solid var(--line);font-size:.78rem
 @media (max-width:520px){
   .rung{grid-template-columns:1fr;gap:2px}
 }
+.ex h4 a,.pick h3 a,.exname a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb, currentColor 30%, transparent);text-underline-offset:3px}
+.ex h4 a:hover,.pick h3 a:hover,.exname a:hover{color:var(--navy);text-decoration-color:currentColor}
+.ex .book,.pick .book{justify-self:start;font-size:.82rem;font-weight:600;color:var(--navy);text-decoration:none}
+.ex .book:hover,.pick .book:hover{text-decoration:underline}
 .portnav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:22px;border-top:1px solid var(--line);font-weight:600}.portnav a{color:var(--teal);text-decoration:none}
 </style>
 </head>
@@ -312,6 +316,9 @@ footer{padding-block:30px 44px;border-top:1px solid var(--line);font-size:.78rem
 </footer>
 
 <script>
+const EXBASE={"jnu": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/jnu", "is1": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/is1", "sit": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/sit", "ktn": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/ktn", "yyj": "https://www.hollandamerica.com/en/us/cruise-destinations/pacific-coast-cruises/pacific-coast-ports/yyj"};const EXRULES={"jnu": [["23023", ["mendenhall", "whale quest"]], ["23022", ["whale watching", "wildlife quest"]], ["23069", ["mendenhall glacier explorer"]], ["23004", ["mendenhall", "salmon bake"]], ["23070", ["mendenhall", "tram"]], ["23005", ["mendenhall", "glacier gardens"]], ["23001", ["glacier gardens", "whale park"]], ["23033", ["tram on your own"]], ["23014", ["alaska salmon bake"]], ["23054", ["best of juneau"]], ["23073", ["glacier trail"]], ["23038", ["photo safari"]], ["23007", ["taku lodge"]], ["23034", ["airboat"]], ["23008", ["helicopter", "guided walk"]], ["", ["luxury whale"]], ["", ["jeep"]], ["", ["dog sled"]]], "is1": [["79304", ["marine mammal"]], ["79330", ["ocean raft"]], ["79322", ["spasski"]], ["79341", ["tribal connections"]], ["793502", ["s'mores"]], ["793501", ["brew with a view"]], ["79350", ["forest tram"]], ["79315", ["ziprider"]], ["79331", ["wilderness hike"]], ["79319", ["kayak"]], ["79349", ["sky peak gondola"]]], "sit": [["37247", ["wild sitka"]], ["37233", ["best of sitka"]], ["37204", ["sea otter"]], ["37265", ["floathouse"]], ["37253", ["food story"]], ["37225", ["fin island"]], ["37211", ["bike & hike"]], ["37237", ["pub crawl"]], ["37239", ["secluded islands"]], ["37235", ["great adventure"]]], "ktn": [["24236", ["misty fjords"]], ["24241", ["george inlet"]], ["24225", ["saxman", "lumberjack"]], ["24203", ["saxman"]], ["24201", ["totem bight"]], ["24208", ["lumberjack", "crab"]], ["24227", ["lumberjack show"]], ["24217", ["trolley"]], ["24231", ["duck"]], ["242791", ["pub crawl"]], ["242961", ["waterfront & wildlife"]], ["24238", ["lighthouse"]], ["24243", ["wilderness exploration"]], ["24207", ["salmon fishing"]], ["242151", ["zodiac"]], ["24260", ["hummer"]]], "yyj": [["43818", ["butterfly"]], ["43816", ["butchart"]], ["43846", ["night lights"]], ["43805", ["easy victoria"]], ["43817", ["guided walk"]], ["43845", ["brewery"]], ["43821", ["culinary"]], ["43815", ["craigdarroch"]]]};function exUrl(code,name){const t=document.createElement('textarea');t.innerHTML=name;const n=t.value.toLowerCase();for(const [id,kws] of (EXRULES[code]||[])){if(kws.every(k=>n.includes(k)))return EXBASE[code]+(id?'/'+id:'');}return null;}
+const lk=(n,txt)=>{const u=exUrl('jnu',n);return u?`<a href="${u}" target="_blank" rel="noopener">${txt||n}</a>`:(txt||n);};
+const bk=(n,txt)=>{const u=exUrl('jnu',n);return u?`<a class="book" href="${u}" target="_blank" rel="noopener">${/\/\d+$/.test(u)?(txt||'Details &amp; booking on Holland America ↗'):'See Juneau tours on Holland America ↗'}</a>`:'';};
 // [id, name, price(num), priceLabel, duration, level E/M, fit Y/M, desc, note, cat, pick]
 const EX = [
   ["mwq","Mendenhall Glacier & Whale Quest",264,"$264","5½ hrs","E","Y","Coach to Mendenhall Glacier with about 75 minutes there, then a covered boat into Stephens Passage for humpbacks.","Whales guaranteed or $100 back. Our #1 all-round pick.","combo",1],
@@ -344,10 +351,10 @@ const CATS = [
 const fmt = n => "$" + n.toLocaleString("en-US");
 const LV = {E:"Easy",M:"Moderate"}, FT = {Y:"Great for Diane",M:"Maybe for Diane"};
 const card = x => `<div class="ex ${x[10]?"pick-mark":""}">
-  <div class="top"><h4>${x[1]}</h4><span class="cost">${x[3]}</span></div>
+  <div class="top"><h4>${lk(x[1])}</h4><span class="cost">${x[3]}</span></div>
   <p>${x[7]}</p>
   <div class="tags"><span class="tag">${x[4]}</span><span class="tag ${x[5]}">${LV[x[5]]}</span><span class="tag fit${x[6]}">${FT[x[6]]}</span>${x[10]?`<span class="tag ours">Our pick</span>`:""}</div>
-  ${x[8]?`<p class="note">${x[8]}</p>`:""}
+  ${x[8]?`<p class="note">${x[8]}</p>`:""}${bk(x[1])}
 </div>`;
 document.getElementById("cats").innerHTML = CATS.map(c=>{
   const list = EX.filter(x=>x[9]===c[0]);
@@ -361,7 +368,7 @@ const PICKS = [
 ];
 document.getElementById("picks").innerHTML = PICKS.map(p=>{
   const x = EX.find(e=>e[0]===p[0]);
-  return `<div class="pick ${p[0]==="taku"?"splurge":""}"><span class="rank">${p[1]}</span><h3>${x[1]}</h3><div class="price">${x[3]}<small>per person · ${x[4]}</small></div><p>${p[2]}</p><p class="why">${p[3]}</p></div>`;
+  return `<div class="pick ${p[0]==="taku"?"splurge":""}"><span class="rank">${p[1]}</span><h3>${lk(x[1])}</h3><div class="price">${x[3]}<small>per person · ${x[4]}</small></div><p>${p[2]}</p><p class="why">${p[3]}</p>${bk(x[1],"Details &amp; booking ↗")}</div>`;
 }).join("");
 
 const priced = EX.map(x=>({n:x[1], v:x[2]!==null?x[2]:parseInt(x[3].replace(/[^0-9–]/g,"").split("–")[0]), lab:x[3], ours:!!x[10]})).sort((a,b)=>a.v-b.v);

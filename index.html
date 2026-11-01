@@ -241,6 +241,9 @@ footer .wrap{display:grid;gap:10px}
   .filters{top:calc(env(safe-area-inset-top, 0px) + 44px)}
 }
 @media (prefers-reduced-motion: no-preference){ html{scroll-behavior:smooth} }
+.ex-table td:first-child a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb, currentColor 30%, transparent);text-underline-offset:3px}
+.ex-table td:first-child a:hover{color:var(--navy)}
+.ex-table .ext{font-size:.75rem;color:var(--navy);margin-left:4px}
 </style>
 </head>
 <body>
@@ -522,6 +525,8 @@ footer .wrap{display:grid;gap:10px}
 </footer>
 
 <script>
+const EXBASE={"jnu": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/jnu", "is1": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/is1", "sit": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/sit", "ktn": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/ktn", "yyj": "https://www.hollandamerica.com/en/us/cruise-destinations/pacific-coast-cruises/pacific-coast-ports/yyj"};const EXRULES={"jnu": [["23023", ["mendenhall", "whale quest"]], ["23022", ["whale watching", "wildlife quest"]], ["23069", ["mendenhall glacier explorer"]], ["23004", ["mendenhall", "salmon bake"]], ["23070", ["mendenhall", "tram"]], ["23005", ["mendenhall", "glacier gardens"]], ["23001", ["glacier gardens", "whale park"]], ["23033", ["tram on your own"]], ["23014", ["alaska salmon bake"]], ["23054", ["best of juneau"]], ["23073", ["glacier trail"]], ["23038", ["photo safari"]], ["23007", ["taku lodge"]], ["23034", ["airboat"]], ["23008", ["helicopter", "guided walk"]], ["", ["luxury whale"]], ["", ["jeep"]], ["", ["dog sled"]]], "is1": [["79304", ["marine mammal"]], ["79330", ["ocean raft"]], ["79322", ["spasski"]], ["79341", ["tribal connections"]], ["793502", ["s'mores"]], ["793501", ["brew with a view"]], ["79350", ["forest tram"]], ["79315", ["ziprider"]], ["79331", ["wilderness hike"]], ["79319", ["kayak"]], ["79349", ["sky peak gondola"]]], "sit": [["37247", ["wild sitka"]], ["37233", ["best of sitka"]], ["37204", ["sea otter"]], ["37265", ["floathouse"]], ["37253", ["food story"]], ["37225", ["fin island"]], ["37211", ["bike & hike"]], ["37237", ["pub crawl"]], ["37239", ["secluded islands"]], ["37235", ["great adventure"]]], "ktn": [["24236", ["misty fjords"]], ["24241", ["george inlet"]], ["24225", ["saxman", "lumberjack"]], ["24203", ["saxman"]], ["24201", ["totem bight"]], ["24208", ["lumberjack", "crab"]], ["24227", ["lumberjack show"]], ["24217", ["trolley"]], ["24231", ["duck"]], ["242791", ["pub crawl"]], ["242961", ["waterfront & wildlife"]], ["24238", ["lighthouse"]], ["24243", ["wilderness exploration"]], ["24207", ["salmon fishing"]], ["242151", ["zodiac"]], ["24260", ["hummer"]]], "yyj": [["43818", ["butterfly"]], ["43816", ["butchart"]], ["43846", ["night lights"]], ["43805", ["easy victoria"]], ["43817", ["guided walk"]], ["43845", ["brewery"]], ["43821", ["culinary"]], ["43815", ["craigdarroch"]]]};function exUrl(code,name){const t=document.createElement('textarea');t.innerHTML=name;const n=t.value.toLowerCase();for(const [id,kws] of (EXRULES[code]||[])){if(kws.every(k=>n.includes(k)))return EXBASE[code]+(id?'/'+id:'');}return null;}
+const portCode=n=>/Juneau/.test(n)?'jnu':/Icy Strait/.test(n)?'is1':/Sitka/.test(n)?'sit':/Ketchikan/.test(n)?'ktn':/Victoria/.test(n)?'yyj':null;
 const fmt = n => "$" + Math.round(n).toLocaleString("en-US");
 const esc = s => s;
 
@@ -776,7 +781,7 @@ function render(){
         ${p.credit?`<p style="font-size:.68rem">${p.credit}</p>`:""}
       </div>
       ${p.ex.length?(rows.length?`<div style="overflow-x:auto"><table class="ex-table"><thead><tr><th>Excursion</th><th class="num">From</th><th>Length</th><th>Activity</th><th>Diane?</th></tr></thead><tbody>${
-        rows.map(x=>`<tr class="${x[7]?"pick":""}"><td><b>${x[0]}</b><small>${x[6]}</small></td><td class="num">${x[2]}</td><td style="white-space:nowrap">${x[3]}</td><td><span class="lvl ${x[4]}">${LV[x[4]]}</span></td><td><span class="fitd ${x[5]}">${FT[x[5]]}</span></td></tr>`).join("")
+        rows.map(x=>{const u=exUrl(portCode(p.name),x[0]);return `<tr class="${x[7]?"pick":""}"><td><b>${u?`<a href="${u}" target="_blank" rel="noopener">${x[0]}</a><span class="ext" aria-hidden="true">↗</span>`:x[0]}</b><small>${x[6]}</small></td><td class="num">${x[2]}</td><td style="white-space:nowrap">${x[3]}</td><td><span class="lvl ${x[4]}">${LV[x[4]]}</span></td><td><span class="fitd ${x[5]}">${FT[x[5]]}</span></td></tr>`;}).join("")
       }</tbody></table></div>`:`<p class="empty">No excursions here match this filter.</p>`):""}
       ${p.free?`<div class="free"><b>${p.ex.length?"Free & on your own":"Good to know"}</b><ul>${p.free.map(f=>`<li>${f}</li>`).join("")}</ul></div>`:""}
     </article>`;
