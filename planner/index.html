@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+.sitenav{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;padding:10px max(16px,env(safe-area-inset-left,0px));background:#141b2b;color:#e8ebf0;font:600 13px/1.4 "Figtree","Segoe UI",system-ui,sans-serif}
+.sitenav b{font-family:"Gloock",Georgia,serif;font-weight:400;font-size:16px;color:#ffc2a8;margin-right:6px}
+.sitenav a{color:#c9d3e2;text-decoration:none;padding:2px 0;border-bottom:2px solid transparent}
+.sitenav a:hover,.sitenav a:focus-visible{color:#fff}
+.sitenav a[aria-current]{color:#fff;border-bottom-color:#ffc2a8}
+</style>
+<title>Trip Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: itinerary builder. Header + toolbar, alerts strip, then a three-column workspace (days | day timeline | add options) that stacks on phones, and a one-page trip summary below. */
+:root{
+  --paper:#f2f4f6; --card:#ffffff; --ink:#1b2333; --muted:#5a6476; --line:#d8dde5;
+  --navy:#1f5f99; --navy-soft:#e3edf7; --rose:#b8466a; --rose-soft:#f6e3ea;
+  --teal:#2b7a82; --teal-soft:#e0eff0; --gold:#a8701c; --gold-soft:#f7ecd9;
+  --red:#b23b3b; --red-soft:#fbe5e5; --port:#e6f1ea; --portline:#5f9a72;
+  --c-exc:#2b7a82; --c-dine:#b8466a; --c-ship:#1f5f99; --c-sea:#a8701c; --c-fixed:#6b7280;
+  --f-display:"Gloock", "Georgia", "Times New Roman", serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"DM Mono", "Consolas", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){color-scheme:dark;
+    --paper:#10151e; --card:#18202c; --ink:#e8ebf0; --muted:#9ba5b5; --line:#2a3443;
+    --navy:#7fb2e6; --navy-soft:#1a2a3d; --rose:#ee8aa6; --rose-soft:#3a2230; --teal:#6cc2c8; --teal-soft:#183136;
+    --gold:#e3ad5c; --gold-soft:#33291a; --red:#ef8a8a; --red-soft:#3a1f22; --port:#1a2c22; --portline:#6fbf8a;
+    --c-exc:#6cc2c8; --c-dine:#ee8aa6; --c-ship:#7fb2e6; --c-sea:#e3ad5c; --c-fixed:#9ba5b5;}
+}
+:root[data-theme="dark"]{color-scheme:dark;
+  --paper:#10151e; --card:#18202c; --ink:#e8ebf0; --muted:#9ba5b5; --line:#2a3443;
+  --navy:#7fb2e6; --navy-soft:#1a2a3d; --rose:#ee8aa6; --rose-soft:#3a2230; --teal:#6cc2c8; --teal-soft:#183136;
+  --gold:#e3ad5c; --gold-soft:#33291a; --red:#ef8a8a; --red-soft:#3a1f22; --port:#1a2c22; --portline:#6fbf8a;
+  --c-exc:#6cc2c8; --c-dine:#ee8aa6; --c-ship:#7fb2e6; --c-sea:#e3ad5c; --c-fixed:#9ba5b5;}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+button,select,input{font:inherit;color:inherit}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.eyebrow{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--rose)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+header.top{padding-block:30px 18px;display:grid;gap:8px}
+header.top h1{font-size:clamp(2.1rem,5vw,3.2rem)}
+header.top p{color:var(--muted);max-width:75ch}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:7px 14px;font-weight:600;font-size:.86rem;cursor:pointer}
+.btn:hover{border-color:var(--navy)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:var(--card)}
+.btn:focus-visible,.dayb:focus-visible,.opt:focus-visible,.blk:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+.status{font-size:.82rem;color:var(--muted)}
+.starter{font-size:.78rem;font-weight:700;color:var(--gold);background:var(--gold-soft);padding:3px 10px;border-radius:99px}
+
+.alerts{margin:10px 0 16px;border-radius:12px;padding:12px 16px;background:var(--red-soft);display:grid;gap:6px}
+.alerts.ok{background:var(--teal-soft)}
+.alerts b{font-size:.92rem}
+.alerts ul{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.alerts li{font-size:.86rem;cursor:pointer}
+.alerts li:hover{text-decoration:underline}
+
+.work{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;gap:16px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px}
+/* days */
+.days{display:grid;gap:6px;padding:10px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 50px)}
+.dayb{display:grid;grid-template-columns:1fr auto;gap:0 8px;text-align:left;padding:9px 10px;border-radius:10px;border:1px solid transparent;background:transparent;cursor:pointer}
+.dayb:hover{background:var(--paper)}
+.dayb[aria-current="true"]{background:var(--navy-soft);border-color:var(--navy)}
+.dayb .d{font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.dayb .n{font-weight:700;font-size:.9rem;grid-column:1}
+.dayb .c{grid-row:1 / span 2;grid-column:2;align-self:center;display:flex;gap:4px}
+.badge{font-size:.7rem;font-weight:700;border-radius:99px;padding:1px 7px;background:var(--paper);color:var(--muted)}
+.badge.warn{background:var(--red);color:var(--card)}
+/* timeline */
+.tlwrap{padding:14px 14px 18px}
+.dayhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 14px;align-items:baseline;margin-bottom:10px}
+.dayhead h2{font-size:1.7rem}
+.dayhead .sub{font-size:.86rem;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.fact{font-size:.78rem;padding:3px 10px;border-radius:99px;background:var(--paper)}
+.fact b{font-family:var(--f-mono);font-weight:500}
+.fact.port{background:var(--port);color:var(--ink)}
+.fact.aboard{background:var(--red-soft)}
+.tl{position:relative;margin-left:58px;border-left:1px solid var(--line)}
+.hr{position:absolute;left:-58px;right:0;height:0;border-top:1px dashed var(--line)}
+.hr span{position:absolute;left:0;top:-9px;width:52px;text-align:right;font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.portband{position:absolute;left:0;right:0;background:var(--port);border-left:3px solid var(--portline)}
+.portband span{position:absolute;right:6px;top:3px;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--portline)}
+.aboardline{position:absolute;left:-6px;right:0;border-top:2px dashed var(--red)}
+.aboardline span{position:absolute;right:4px;top:-17px;font-size:.68rem;font-weight:700;color:var(--red);background:var(--card);padding:0 4px}
+.blk{position:absolute;border-radius:8px;padding:4px 8px;font-size:.78rem;line-height:1.25;overflow:hidden;cursor:pointer;border:1px solid transparent;background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.06);text-align:left}
+.blk b{display:block;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blk .t{font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.blk.fixed{cursor:default;background:var(--paper);border-style:dashed;border-color:var(--line)}
+.blk.ambient{background:transparent;border:1px dashed var(--c-sea);color:var(--muted)}
+.blk.k-exc{border-left:4px solid var(--c-exc)}
+.blk.k-dine{border-left:4px solid var(--c-dine)}
+.blk.k-ship{border-left:4px solid var(--c-ship)}
+.blk.k-sea{border-left:4px solid var(--c-sea)}
+.blk.k-fixed{border-left:4px solid var(--c-fixed)}
+.blk.bad{border-color:var(--red);background:var(--red-soft)}
+.blk.sel{outline:2px solid var(--navy)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.76rem;color:var(--muted);margin-top:12px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+/* editor */
+.editor{margin-top:14px;border:1px solid var(--navy);border-radius:12px;padding:12px 14px;display:grid;gap:10px;background:var(--navy-soft)}
+.editor .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.editor label{font-size:.8rem;font-weight:600;display:flex;gap:6px;align-items:center}
+.editor select{border:1px solid var(--line);border-radius:8px;padding:5px 8px;background:var(--card)}
+.editor .msg{font-size:.84rem;color:var(--red)}
+.editor .msg.ok{color:var(--teal)}
+/* add panel */
+.addp{padding:12px;display:grid;gap:10px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 50px);max-height:calc(100vh - 70px);overflow:auto}
+.addp h3{font-size:1.3rem}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:4px 11px;font-size:.8rem;font-weight:600;cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.opts{display:grid;gap:8px}
+.opt{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:4px;background:var(--card)}
+.opt .h{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.opt .h b{font-size:.88rem;line-height:1.3}
+.opt .h .p{font-family:var(--f-mono);font-size:.78rem;white-space:nowrap;color:var(--navy)}
+.opt .m{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.74rem;color:var(--muted)}
+.opt .m a{color:var(--navy);font-weight:600;text-decoration:none}
+.opt .m a:hover{text-decoration:underline}
+.opt .addrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.opt select{border:1px solid var(--line);border-radius:8px;padding:3px 6px;background:var(--card);font-size:.8rem}
+.opt .add{border:0;background:var(--navy);color:var(--card);border-radius:99px;padding:4px 12px;font-weight:700;font-size:.78rem;cursor:pointer}
+.opt.in{background:var(--paper);opacity:.75}
+.lvlE{color:var(--teal)}.lvlM{color:var(--gold)}.lvlS{color:var(--red)}
+.empty{font-size:.86rem;color:var(--muted);padding:6px 2px}
+
+/* summary */
+.summary{margin-block:28px 50px}
+.summary .sh{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:12px}
+.summary h2{font-size:clamp(1.8rem,4vw,2.4rem)}
+.sumgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.sday{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:6px;align-content:start}
+.sday.bad{border-color:var(--red)}
+.sday .hd{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.sday .hd b{font-size:1rem}
+.sday .hd span{font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.sday .pw{font-size:.78rem;color:var(--portline);font-weight:600}
+.sday ul{margin:0;padding:0;list-style:none;display:grid;gap:3px}
+.sday li{display:grid;grid-template-columns:118px 1fr;gap:8px;font-size:.84rem}
+.sday li .tm{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);padding-top:1px}
+.sday li.fx{color:var(--muted)}
+.sday li.warn{color:var(--red)}
+.totals{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px}
+.tot{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:grid}
+.tot b{font-family:var(--f-mono);font-size:1.3rem;font-weight:500}
+.tot span{font-size:.76rem;color:var(--muted)}
+.note{font-size:.8rem;color:var(--muted);margin-top:10px;max-width:90ch}
+
+@media (max-width:1100px){
+  .work{grid-template-columns:200px minmax(0,1fr)}
+  .addp{grid-column:1 / -1;position:static;max-height:none}
+}
+@media (max-width:720px){
+  .work{grid-template-columns:1fr}
+  .days{position:static;grid-template-columns:repeat(3,1fr);gap:4px;padding:6px}
+  .dayb{grid-template-columns:1fr;padding:6px}
+  .dayb .c{grid-row:auto;grid-column:auto}
+  .sday li{grid-template-columns:96px 1fr}
+}
+@media print{
+  header.top .toolbar,.work,.alerts,.sitenav{display:none!important}
+  .summary{margin-top:0}
+  .sday{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<nav class="sitenav" aria-label="Trip pages"><b>Diane's 70th</b><a href="/ports/">Ports & excursions</a><a href="/dining/">Ship dining</a><a href="/planner/" aria-current="page">Trip planner</a><a href="/">The Eurodam guide</a><a href="/trip/">Boston trip plan</a><a href="/finalists/">The 4 finalists</a><a href="/options/">All 13 options</a></nav>
+
+
+<div class="wrap" data-nolink>
+  <header class="top">
+    <p class="eyebrow">Diane's 70th · Eurodam · Aug 27 – Sep 4, 2027</p>
+    <h1>Trip planner</h1>
+    <p>Pick excursions, dinners and activities for each day. The planner shows each day's docking window and all-aboard time, and flags anything that overlaps, runs past all-aboard, or falls outside a restaurant's hours. It opens with our suggested plan; change anything. Your plan saves on this device, and <b>Share plan</b> creates a link with the whole plan for the family.</p>
+    <div class="toolbar">
+      <button class="btn primary" id="share" type="button">Share plan (copy link)</button>
+      <button class="btn" id="print" type="button">Print summary</button>
+      <button class="btn" id="starter" type="button">Load suggested plan</button>
+      <button class="btn" id="clear" type="button">Clear everything</button>
+      <span class="starter" id="starterTag" hidden>Showing our suggested plan</span>
+      <span class="status" id="status" role="status"></span>
+    </div>
+  </header>
+
+  <div class="alerts" id="alerts" aria-live="polite"></div>
+
+  <div class="work">
+    <nav class="panel days" id="days" aria-label="Trip days"></nav>
+    <section class="panel tlwrap" id="daypane" aria-label="Day schedule"></section>
+    <aside class="panel addp" id="addpane" aria-label="Add to this day"></aside>
+  </div>
+
+  <section class="summary" id="summary" aria-label="Trip summary"></section>
+</div>
+
+<script>
+const EXBASE={"jnu": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/jnu", "is1": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/is1", "sit": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/sit", "ktn": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/ktn", "yyj": "https://www.hollandamerica.com/en/us/cruise-destinations/pacific-coast-cruises/pacific-coast-ports/yyj"};const EXRULES={"jnu": [["23023", ["mendenhall", "whale quest"]], ["23022", ["whale watching", "wildlife quest"]], ["23069", ["mendenhall glacier explorer"]], ["23004", ["mendenhall", "salmon bake"]], ["23070", ["mendenhall", "tram"]], ["23005", ["mendenhall", "glacier gardens"]], ["23001", ["glacier gardens", "whale park"]], ["23033", ["tram on your own"]], ["23014", ["alaska salmon bake"]], ["23054", ["best of juneau"]], ["23073", ["glacier trail"]], ["23038", ["photo safari"]], ["23007", ["taku lodge"]], ["23034", ["airboat"]], ["23008", ["helicopter", "guided walk"]], ["23012", ["float trip"]], ["230361", ["luxury whale"]], ["230922", ["jeep"]], ["23026", ["dog sled"]]], "is1": [["79304", ["marine mammal"]], ["79330", ["ocean raft"]], ["79322", ["spasski"]], ["79341", ["tribal connections"]], ["793502", ["s'mores"]], ["793501", ["brew with a view"]], ["79350", ["forest tram"]], ["79315", ["ziprider"]], ["79331", ["wilderness hike"]], ["79319", ["kayak"]], ["79349", ["sky peak gondola"]]], "sit": [["37247", ["wild sitka"]], ["37233", ["best of sitka"]], ["37204", ["sea otter"]], ["37265", ["floathouse"]], ["37253", ["food story"]], ["37225", ["fin island"]], ["37211", ["bike & hike"]], ["37237", ["pub crawl"]], ["37239", ["secluded islands"]], ["37235", ["great adventure"]]], "ktn": [["24236", ["misty fjords"]], ["24241", ["george inlet"]], ["24225", ["saxman", "lumberjack"]], ["24203", ["saxman"]], ["24201", ["totem bight"]], ["24208", ["lumberjack", "crab"]], ["24227", ["lumberjack show"]], ["24217", ["trolley"]], ["24231", ["duck"]], ["242791", ["pub crawl"]], ["242961", ["waterfront & wildlife"]], ["24238", ["lighthouse"]], ["24243", ["wilderness exploration"]], ["24207", ["salmon fishing"]], ["242151", ["zodiac"]], ["24260", ["hummer"]]], "yyj": [["43818", ["butterfly"]], ["43816", ["butchart"]], ["43846", ["night lights"]], ["43805", ["easy victoria"]], ["43817", ["guided walk"]], ["43845", ["brewery"]], ["43821", ["culinary"]], ["43815", ["craigdarroch"]]]};function exUrl(code,name){const t=document.createElement('textarea');t.innerHTML=name;const n=t.value.toLowerCase();for(const [id,kws] of (EXRULES[code]||[])){if(kws.every(k=>n.includes(k)))return EXBASE[code]+(id?'/'+id:'');}return null;}
+const H = 60;              // minutes per hour
+const PX = 44;             // pixels per hour on the timeline
+const T = (h, m = 0) => h * 60 + m;
+const fmt = min => { min = ((min % 1440) + 1440) % 1440; let h = Math.floor(min / 60), m = min % 60; const ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12; return h + (m ? ":" + String(m).padStart(2, "0") : "") + " " + ap; };
+const money = n => "$" + Math.round(n).toLocaleString("en-US");
+const PARTY = 4;
+
+/* ---------------- Days ---------------- */
+// port: {name, code, arrive, depart, aboard, earliest, latest}  (minutes from midnight)
+const DAYS = [
+  { id:"d0", date:"Fri Aug 27", name:"Boston → Seattle", ctx:["seattle"], view:[T(6),T(24)],
+    fixed:[["8:00 am ET flight from Boston","BOS → SEA, about 6 hrs 20 min", T(5), T(11,30)], ["Land at Seattle-Tacoma","Car to the hotel, drop bags", T(11,30), T(12,30)]],
+    window:{seattle:[T(12,30), T(23)]}, facts:[["Lands","~11:30 am"],["Hotel","check-in ~3–4 pm"],["Sunset","~8:00 pm"]] },
+  { id:"d1", date:"Sat Aug 28", name:"Seattle · board · Diane's 70th", bday:true, ctx:["seattle","ship"], view:[T(6),T(24)],
+    fixed:[["Ride to Pier 91 & check in","Use your assigned arrival time", T(11), T(12)], ["All aboard","", T(14,30), T(14,45)], ["Sail away from Seattle","Elliott Bay & the Olympics", T(15), T(15,45), "ambient"]],
+    window:{seattle:[T(7), T(11)], ship:[T(12), T(24)]}, facts:[["Board","~11 am – 2:30 pm"],["Sails","3:00 pm"],["Dress","smart casual"]] },
+  { id:"d2", date:"Sun Aug 29", name:"At sea · Inside Passage", ctx:["ship","sea"], view:[T(6),T(24)], fixed:[], dressy:true,
+    window:{ship:[T(6), T(24)]}, facts:[["Sea day",""],["Dress","Dressy night"]] },
+  { id:"d3", date:"Mon Aug 30", name:"Juneau", ctx:["port","ship"], view:[T(6),T(24)],
+    port:{ name:"Juneau", code:"jnu", arrive:T(12,30), depart:T(22), aboard:T(21,30), earliest:T(13), latest:T(21,30) },
+    fixed:[], window:{ship:[T(6), T(24)]}, facts:[["Sunset","~8:15 pm"]] },
+  { id:"d4", date:"Tue Aug 31", name:"Glacier Bay & Icy Strait Point", ctx:["port","ship"], view:[T(5),T(24)],
+    port:{ name:"Icy Strait Point", code:"is1", arrive:T(17,30), depart:T(22), aboard:T(21,30), earliest:T(17,45), latest:T(21,30) },
+    fixed:[["Glacier Bay National Park","Rangers aboard · scenic cruising (enjoy from anywhere)", T(6), T(15), "ambient"]],
+    window:{ship:[T(5), T(24)]}, facts:[["Glacier Bay","6 am – 3 pm"],["Sunset","~8:15 pm"]] },
+  { id:"d5", date:"Wed Sep 1", name:"Sitka", ctx:["port","ship"], view:[T(6),T(24)],
+    port:{ name:"Sitka", code:"sit", arrive:T(8), depart:T(16), aboard:T(15,30), earliest:T(8,30), latest:T(15,15) },
+    fixed:[], window:{ship:[T(6), T(24)]}, facts:[["Shuttle","10–15 min to town"],["Allow","15 min to return"]] },
+  { id:"d6", date:"Thu Sep 2", name:"Ketchikan", ctx:["port","ship"], view:[T(5),T(24)],
+    port:{ name:"Ketchikan", code:"ktn", arrive:T(6,30), depart:T(13), aboard:T(12,30), earliest:T(6,45), latest:T(12,30) },
+    fixed:[], window:{ship:[T(5), T(24)]}, facts:[["Docks","downtown, walkable"]] },
+  { id:"d7", date:"Fri Sep 3", name:"At sea · Victoria by night", ctx:["port","ship","sea"], view:[T(6),T(24,30)], dressy:true,
+    port:{ name:"Victoria, BC", code:"yyj", arrive:T(20), depart:T(24), aboard:T(23,30), earliest:T(20,15), latest:T(23,30) },
+    fixed:[["Put luggage outside the cabin door","Before going ashore in Victoria", T(19,45), T(20)]],
+    window:{ship:[T(6), T(24)]}, facts:[["Dress","Dressy night"],["Passports","needed ashore"]] },
+  { id:"d8", date:"Sat Sep 4", name:"Seattle → Boston", ctx:["ship"], view:[T(5),T(24)],
+    fixed:[["Eurodam arrives at Pier 91","", T(7), T(7,15)], ["Disembark (assigned time)","Bags via Port Valet", T(8), T(9,30)], ["Ride to Seattle-Tacoma","35–45 min", T(9,30), T(10,30)], ["Flight SEA → BOS","Nonstop ~5 hrs 15 min, lands ~9:30 pm ET", T(12,30), T(17,45)]],
+    window:{ship:[T(6), T(8)]}, facts:[["Docks","7:00 am"],["Fly after","~12:30 pm"]] }
+];
+
+/* ---------------- Options catalog ---------------- */
+// kind: exc (port excursion) | dine | ship | sea (sea-day ship) | seattle
+// [id, name, kind, ctx, durMin, pricePP, opts]
+const O = [];
+const add = (id, name, kind, ctx, dur, price, more = {}) => O.push({ id, name, kind, ctx, dur, price, ...more });
+// Juneau
+[["j1","Mendenhall Glacier & Whale Quest",330,264,"E",1],["j2","Whale Watching & Wildlife Quest",240,214,"E"],["j3","All-Inclusive Luxury Whale Watch",240,524,"E"],
+ ["j4","Best of Juneau: Whales, Mendenhall & Orca Point Lodge",405,299,"E"],["j5","Whales & Mendenhall Glacier Trail (small group)",300,259,"M"],["j6","Whales & Mendenhall Photo Safari (small group)",300,275,"E",0,1],
+ ["j7","Mendenhall Glacier Explorer",180,79,"E"],["j8","Mendenhall Glacier & Glacier Gardens",240,124,"E"],["j9","Mendenhall Glacier & Juneau Tram",240,139,"M"],
+ ["j10","Taku Lodge Feast & Five Glacier Seaplane",210,494,"E"],["j11","Mendenhall Glacier Helicopter & Guided Walk",135,449,"M"],["j12","Taku Glacier Helicopter Landing & Airboat",195,724,"M"],
+ ["j13","Dog Sledding & Glacier Adventure by Helicopter",195,764,"M"],["j14","Mendenhall Glacier & Salmon Bake",240,144,"E"],["j15","Alaska Salmon Bake",90,79,"E"],
+ ["j16","Juneau Highlights: Glacier Gardens & Whale Park",150,94,"E"],["j17","Goldbelt Tram On Your Own",150,68,"E"],["j18","Mendenhall Glacier Float Trip",210,205,"M"],
+ ["j19","Self-Guided Jeep (4-door)",270,469,"E",0,0,1]
+].forEach(([id,n,d,p,l,pick,est,veh]) => add(id,n,"exc","jnu",d,p,{lvl:l,pick:!!pick,est:!!est,perVehicle:!!veh}));
+// Icy Strait Point
+[["i1","Whale Watch & Marine Mammal Safari",150,219,"E",1],["i2","Ocean Raft Adventure",120,179,"M"],["i3","Spasski River Valley Wildlife & Bear Search",150,134,"M"],
+ ["i4","Hoonah Sightseeing & Tribal Connections",90,84,"E"],["i5","Sky Peak Gondola",60,54,"E"],["i6","Sky Peak Gondola: Campfire & S'mores",90,69,"E"],
+ ["i7","Sky Peak Gondola: Brew with a View",90,79,"E"],["i8","Sky Peak Gondola & Forest Tram",120,119,"E"],["i9","ZipRider Adventure & Sky Peak Gondola",90,199,"M"],
+ ["i10","Wilderness Hike",150,109,"M"],["i11","Icy Strait Point Kayak Adventure",150,154,"S"]
+].forEach(([id,n,d,p,l,pick]) => add(id,n,"exc","is1",d,p,{lvl:l,pick:!!pick}));
+// Sitka
+[["s1","Wild Sitka: Alaska Raptor Center & Fortress of the Bear",210,149,"E",1],["s2","Best of Sitka: Otters, Raptors & Bears",300,269,"E"],["s3","Sea Otter & Wildlife Quest",150,179,"E"],
+ ["s4","Historic Floathouse, Waterfront & Scenic Cruise (small group)",150,189,"E"],["s5","Sitka's Food Story: Land, Sea, People",180,144,"M"],["s6","Sitka's Barrier Islands & Fin Island Lodge",210,244,"M"],
+ ["s7","Sitka Bike & Hike",180,149,"M"],["s8","Sitka Pedal & Pub Crawl",120,89.95,"M"],["s9","Secluded Islands Cruise & Kayak Adventure",180,249,"S"],["s10","Sitka's Great Adventure (small group)",360,249,"S"]
+].forEach(([id,n,d,p,l,pick]) => add(id,n,"exc","sit",d,p,{lvl:l,pick:!!pick}));
+// Ketchikan
+[["k1","Misty Fjords & Wilderness Explorer Cruise",255,229,"E",1],["k2","Floatplane Flightseeing & Crab Meal at George Inlet Lodge",180,414,"E"],["k3","Saxman Native Village, Dance & Totem Park",120,89,"E"],
+ ["k4","Saxman Village, Dance, Totems & Lumberjack Show",210,134,"E"],["k5","Totem Bight State Park & Ketchikan Highlights",150,64,"M"],["k6","The Great Alaskan Lumberjack Show",75,43,"E"],
+ ["k7","City Highlights, Totems & Creek Street by Trolley",75,74,"E"],["k8","Town & Harbor by Duck",90,84,"M"],["k9","Ketchikan Pub Crawl",90,94,"E"],
+ ["k10","Waterfront & Wildlife Cruise",120,129,"E"],["k11","Lighthouse, Totems & Eagles",180,129,"M"],["k12","Wilderness Exploration Cruise & Crab Feast",240,209,"E"],
+ ["k13","Lumberjack Show & Crab Feast",150,150,"E",0,1],["k14","Ketchikan Salmon Fishing",270,274,"E"],["k15","Exclusive Wilderness Zodiac Quest",210,299,"S"],["k16","Private Hummer with driver",180,729,"E",0,0,1]
+].forEach(([id,n,d,p,l,pick,est,veh]) => add(id,n,"exc","ktn",d,p,{lvl:l,pick:!!pick,est:!!est,perVehicle:!!veh}));
+// Victoria
+[["v1","Enchanting Butchart Gardens (Evening Calls)",195,144,"E",1],["v2","O Canada: Victoria Night Lights & Highlights",75,99,"E"],["v3","Easy Victoria Highlights",120,94,"E"],
+ ["v4","A Guided Walk into Victoria",120,44,"M"],["v5","Craft Brewery & Distillery Experience",165,99,"M"]
+].forEach(([id,n,d,p,l,pick]) => add(id,n,"exc","yyj",d,p,{lvl:l,pick:!!pick}));
+// On your own in port (free/cheap)
+[["jf1","Downtown Juneau on foot (Capitol, Russian church, Seawalk)","jnu",90,0],["jf2","Mendenhall Glacier by shuttle (on your own)","jnu",180,52],["jf3","Tracy's King Crab Shack dinner","jnu",75,null],["jf4","Red Dog Saloon","jnu",60,null],
+ ["if1","Cannery boardwalk, shops & trails","is1",60,0],["sf1","St. Michael's Cathedral & Castle Hill","sit",75,0],["sf2","Sitka National Historical Park totem trail","sit",60,0],["sf3","New Archangel Dancers","sit",45,15],
+ ["kf1","Creek Street & the salmon ladder","ktn",60,0],["kf2","Totem Heritage Center","ktn",60,7],["vf1","Inner Harbour & Parliament lights stroll","yyj",120,0]
+].forEach(([id,n,c,d,p]) => add(id,n,"own",c,d,p));
+// Ship dining & activities
+add("p1","Pinnacle Grill dinner","dine","ship",120,62.4,{hours:[T(17),T(21)],note:"$52 + 20%. Book embarkation night for free sparkling wine."});
+add("p2","Tamarind dinner","dine","ship",105,46.8,{hours:[T(17),T(21)],note:"$39 + 20%"});
+add("p3","Canaletto dinner","dine","ship",105,30,{hours:[T(17),T(21)],note:"$25 + 20%"});
+add("p4","Morimoto by Sea pop-up","dine","ship",120,66,{hours:[T(17),T(21)],note:"~$55 + 20% · runs about one night"});
+add("p5","Seafood Boil pop-up","dine","ship",90,42,{hours:[T(17),T(21)],note:"$35 + 20% · runs one night"});
+add("p6","The Dining Room dinner","dine","ship",105,0,{hours:[T(17),T(21)],note:"Included"});
+add("p7","Lido Market dinner (buffet)","dine","ship",60,0,{hours:[T(17),T(23)],note:"Included"});
+add("p8","Pinnacle Grill lunch","dine","sea",75,30,{hours:[T(12),T(13,30)],note:"~$25 + 20% · sea days"});
+add("p9","Balcony breakfast (room service)","dine","ship",60,0,{hours:[T(6),T(10,30)],note:"Order the night before"});
+add("p10","Alaska Brunch, The Dining Room","dine","sea",75,0,{hours:[T(9),T(11)],note:"Once per cruise"});
+add("a1","Royal Dutch High Tea","ship","sea",60,0,{hours:[T(15),T(15)],note:"3:00 pm, once per cruise"});
+add("a2","Greenhouse Spa thermal suite","ship","ship",120,0,{note:"Week pass ~$150–300 pp"});
+add("a3","Live cooking show (World Stage)","ship","sea",60,0,{hours:[T(10),T(15)]});
+add("a4","Show at the World Stage","ship","ship",60,0,{hours:[T(19),T(21,30)]});
+add("a5","Rolling Stone Lounge (live band)","ship","ship",90,0,{hours:[T(19,30),T(23)]});
+add("a6","Billboard Onboard (dueling pianos)","ship","ship",60,0,{hours:[T(16),T(23)]});
+add("a7","Happy hour (4–5 pm, half price)","ship","ship",60,0,{hours:[T(16),T(16)]});
+add("a8","Sail-away toast, Sea View deck","ship","ship",45,0);
+add("a9","Crow's Nest scenic watching","ship","ship",60,0);
+// Seattle
+add("w1","Pike Place Market","seattle","seattle",90,0,{hours:[T(8),T(17)]});
+add("w2","Overlook Walk & new waterfront","seattle","seattle",60,0,{hours:[T(7),T(21)]});
+add("w3","Seattle Aquarium","seattle","seattle",120,45,{hours:[T(9,30),T(16)]});
+add("w4","Argosy Harbor Cruise","seattle","seattle",60,42,{hours:[T(10),T(18)]});
+add("w5","Seattle Great Wheel","seattle","seattle",30,16,{hours:[T(10),T(22,30)]});
+add("w6","Space Needle + Chihuly Garden and Glass","seattle","seattle",150,72,{hours:[T(9),T(20)]});
+add("w7","Kerry Park sunset","seattle","seattle",45,0,{hours:[T(19),T(19,45)]});
+add("w8","Birthday breakfast at the hotel","seattle","seattle",60,0,{hours:[T(7),T(10)]});
+[["r1","Six Seven (The Edgewater) dinner",null],["r2","Canlis dinner",216],["r3","The Pink Door dinner",null],["r4","Matt's in the Market dinner",null],
+ ["r5","Elliott's Oyster House dinner",null],["r6","Sushi Kashiba dinner",null],["r7","Ivar's Acres of Clams dinner",null]
+].forEach(([id,n,p]) => add(id,n,"sdine","seattle",120,p,{hours:[T(17),T(21)]}));
+
+const OPT = Object.fromEntries(O.map(o => [o.id, o]));
+const KIND = { exc:["Excursions","k-exc"], own:["On your own","k-exc"], dine:["Dining","k-dine"], ship:["On board","k-ship"], seattle:["Seattle","k-sea"], sdine:["Seattle dining","k-dine"] };
+
+/* ---------------- Suggested plan ---------------- */
+const STARTER = [
+  ["d0","w1",T(13),4],["d0","w2",T(15),4],["d0","r3",T(17,30),4],["d0","w7",T(19,30),4],
+  ["d1","w8",T(8,30),4],["d1","a8",T(15),4],["d1","a7",T(16),4],["d1","p1",T(19),4],["d1","a5",T(21,15),4],
+  ["d2","p9",T(8),4],["d2","a3",T(11),4],["d2","a1",T(15),4],["d2","p6",T(19),4],["d2","a6",T(21),4],
+  ["d3","j1",T(13,15),4],["d3","jf3",T(19,15),4],
+  ["d4","p9",T(7,30),4],["d4","i1",T(17,45),4],["d4","p2",T(20,30),4],
+  ["d5","s1",T(8,45),4],["d5","sf1",T(12,45),4],["d5","p3",T(19),4],
+  ["d6","k1",T(7,15),4],["d6","p4",T(19),4],
+  ["d7","a2",T(10),4],["d7","p6",T(17,15),4],["d7","v1",T(20,15),4]
+];
+
+/* ---------------- State ---------------- */
+let plan = [];    // {u, day, opt, start, people}
+let curDay = "d1";
+let selU = null;
+let isStarter = false;
+let tab = null;
+const KEY = "diane70-planner-v1";
+const uid = () => Math.random().toString(36).slice(2, 9);
+const fromStarter = () => STARTER.map(([day, opt, start, people]) => ({ u: uid(), day, opt, start, people }));
+
+function encodePlan() {
+  const compact = plan.map(p => [p.day, p.opt, p.start, p.people]);
+  return btoa(unescape(encodeURIComponent(JSON.stringify(compact)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function decodePlan(s) {
+  try {
+    const json = decodeURIComponent(escape(atob(s.replace(/-/g, "+").replace(/_/g, "/"))));
+    return JSON.parse(json).filter(r => OPT[r[1]] && DAYS.some(d => d.id === r[0])).map(([day, opt, start, people]) => ({ u: uid(), day, opt, start, people }));
+  } catch (e) { return null; }
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify({ plan: plan.map(p => [p.day, p.opt, p.start, p.people]), starter: isStarter })); } catch (e) {}
+}
+function load() {
+  const h = location.hash.match(/plan=([\w-]+)/);
+  if (h) { const p = decodePlan(h[1]); if (p) { plan = p; isStarter = false; status("Loaded the shared plan."); save(); return; } }
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (s && Array.isArray(s.plan)) { plan = s.plan.filter(r => OPT[r[1]]).map(([day, opt, start, people]) => ({ u: uid(), day, opt, start, people })); isStarter = !!s.starter; return; }
+  } catch (e) {}
+  plan = fromStarter(); isStarter = true;
+}
+let stT; function status(msg) { const el = document.getElementById("status"); el.textContent = msg; clearTimeout(stT); stT = setTimeout(() => el.textContent = "", 4000); }
+
+/* ---------------- Rules ---------------- */
+function dayOf(id) { return DAYS.find(d => d.id === id); }
+function itemsOn(dayId) { return plan.filter(p => p.day === dayId).sort((a, b) => a.start - b.start); }
+function placeFor(o, d) {
+  if (o.kind === "exc" || o.kind === "own") return d.port && d.port.code === o.ctx;
+  if (o.ctx === "seattle") return d.ctx.includes("seattle");
+  if (o.ctx === "sea") return d.ctx.includes("sea");
+  if (o.ctx === "ship") return d.ctx.includes("ship") && d.id !== "d8";
+  return false;
+}
+function problems(p) {
+  const o = OPT[p.opt], d = dayOf(p.day), end = p.start + o.dur, out = [];
+  if (!placeFor(o, d)) out.push(`${o.name} isn't available on ${d.date}.`);
+  if ((o.kind === "exc" || o.kind === "own") && d.port) {
+    if (p.start < d.port.earliest) out.push(`Starts before you can be ashore (earliest ~${fmt(d.port.earliest)}).`);
+    if (end > d.port.latest) out.push(`Ends ${fmt(end)}, after you need to be back (${fmt(d.port.latest)}; all aboard ${fmt(d.port.aboard)}).`);
+  }
+  if (o.hours) {
+    if (p.start < o.hours[0] || p.start > o.hours[1]) out.push(`${o.name} usually starts ${o.hours[0] === o.hours[1] ? "at " + fmt(o.hours[0]) : "between " + fmt(o.hours[0]) + " and " + fmt(o.hours[1])}.`);
+  }
+  const w = d.window || {};
+  if (o.ctx === "seattle" && w.seattle && (p.start < w.seattle[0] || end > w.seattle[1])) out.push(`In Seattle you're free ${fmt(w.seattle[0])} – ${fmt(w.seattle[1])} this day.`);
+  if ((o.ctx === "ship" || o.ctx === "sea") && w.ship && (p.start < w.ship[0] || end > w.ship[1])) out.push(`You're on board ${fmt(w.ship[0])} – ${fmt(w.ship[1])} this day.`);
+  // Overlaps with other plan items
+  for (const q of plan) {
+    if (q === p || q.day !== p.day) continue;
+    const qe = q.start + OPT[q.opt].dur;
+    if (p.start < qe && q.start < end) out.push(`Overlaps "${OPT[q.opt].name}" (${fmt(q.start)} – ${fmt(qe)}).`);
+  }
+  // Overlaps with fixed events (except ambient)
+  for (const f of d.fixed) {
+    if (f[4] === "ambient") continue;
+    if (p.start < f[3] && f[2] < end) out.push(`Overlaps "${f[0]}" (${fmt(f[2])} – ${fmt(f[3])}).`);
+  }
+  return out;
+}
+function allProblems() { return plan.map(p => ({ p, list: problems(p) })).filter(x => x.list.length); }
+function costOf(p) { const o = OPT[p.opt]; if (o.price == null) return null; return o.perVehicle ? o.price : o.price * p.people; }
+
+/* ---------------- Render ---------------- */
+function render() {
+  renderAlerts(); renderDays(); renderDay(); renderAdd(); renderSummary();
+  document.getElementById("starterTag").hidden = !isStarter;
+}
+function renderAlerts() {
+  const el = document.getElementById("alerts"), pr = allProblems();
+  if (!pr.length) { el.className = "alerts ok"; el.innerHTML = `<b>✓ Everything fits.</b> No overlaps, and every outing is back before all aboard.`; return; }
+  el.className = "alerts";
+  el.innerHTML = `<b>${pr.length} item${pr.length > 1 ? "s" : ""} need${pr.length > 1 ? "" : "s"} attention</b><ul>${pr.map(x => `<li data-day="${x.p.day}" data-u="${x.p.u}" tabindex="0">${dayOf(x.p.day).date} · <b>${OPT[x.p.opt].name}</b> at ${fmt(x.p.start)}: ${x.list[0]}</li>`).join("")}</ul>`;
+  el.querySelectorAll("li").forEach(li => {
+    const go = () => { curDay = li.dataset.day; selU = li.dataset.u; tab = null; render(); document.getElementById("daypane").scrollIntoView({ behavior: "smooth", block: "start" }); };
+    li.addEventListener("click", go); li.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  });
+}
+function renderDays() {
+  const el = document.getElementById("days");
+  el.innerHTML = DAYS.map(d => {
+    const items = itemsOn(d.id), bad = items.filter(p => problems(p).length).length;
+    return `<button type="button" class="dayb" data-day="${d.id}" aria-current="${d.id === curDay}"><span class="d">${d.date}</span><span class="c">${bad ? `<span class="badge warn" title="${bad} problem(s)">${bad}!</span>` : ""}<span class="badge">${items.length}</span></span><span class="n">${d.name}</span></button>`;
+  }).join("");
+  el.querySelectorAll(".dayb").forEach(b => b.addEventListener("click", () => { curDay = b.dataset.day; selU = null; tab = null; render(); }));
+}
+function renderDay() {
+  const d = dayOf(curDay), el = document.getElementById("daypane");
+  const [v0, v1] = d.view, hgt = (v1 - v0) / H * PX, y = m => (m - v0) / H * PX;
+  const facts = [];
+  if (d.port) facts.push(`<span class="fact port">${d.port.name} <b>${fmt(d.port.arrive)} – ${fmt(d.port.depart)}</b></span>`, `<span class="fact aboard">All aboard <b>${fmt(d.port.aboard)}</b></span>`);
+  d.facts.forEach(([a, b]) => facts.push(`<span class="fact">${a}${b ? ` <b>${b}</b>` : ""}</span>`));
+  let g = "";
+  for (let m = Math.ceil(v0 / 60) * 60; m <= v1; m += 60) g += `<div class="hr" style="top:${y(m)}px"><span>${fmt(m)}</span></div>`;
+  if (d.port) g += `<div class="portband" style="top:${y(d.port.arrive)}px;height:${(d.port.depart - d.port.arrive) / H * PX}px"><span>In port · ${d.port.name}</span></div><div class="aboardline" style="top:${y(d.port.aboard)}px"><span>All aboard ${fmt(d.port.aboard)}</span></div>`;
+  // lay out blocks into lanes so overlaps are visible side by side
+  const blocks = [
+    ...d.fixed.map(f => ({ fixed: true, ambient: f[4] === "ambient", name: f[0], sub: f[1], s: f[2], e: f[3] })),
+    ...itemsOn(d.id).map(p => ({ p, name: OPT[p.opt].name, s: p.start, e: p.start + OPT[p.opt].dur, kind: OPT[p.opt].kind, bad: problems(p).length > 0 }))
+  ].sort((a, b) => a.s - b.s || (a.ambient ? -1 : 1));
+  const lanesEnd = [];
+  blocks.forEach(b => {
+    if (b.ambient) { b.lane = -1; return; }
+    let i = lanesEnd.findIndex(e => e <= b.s); if (i < 0) { i = lanesEnd.length; lanesEnd.push(0); } lanesEnd[i] = b.e; b.lane = i;
+  });
+  const lanes = Math.max(1, lanesEnd.length), lw = 100 / lanes;
+  g += blocks.map(b => {
+    const top = y(Math.max(b.s, v0)), h = Math.max(22, (Math.min(b.e, v1) - Math.max(b.s, v0)) / H * PX - 2);
+    const left = b.lane < 0 ? "0%" : `calc(${b.lane * lw}% + 4px)`, width = b.lane < 0 ? "100%" : `calc(${lw}% - 8px)`;
+    const cls = b.fixed ? `blk fixed k-fixed ${b.ambient ? "ambient" : ""}` : `blk ${KIND[b.kind][1]} ${b.bad ? "bad" : ""} ${b.p.u === selU ? "sel" : ""}`;
+    const tag = b.fixed ? "div" : "button";
+    return `<${tag} ${b.fixed ? "" : `type="button" data-u="${b.p.u}"`} class="${cls}" style="top:${top}px;height:${h}px;left:${left};width:${width}" title="${b.name} · ${fmt(b.s)} – ${fmt(b.e)}"><b>${b.bad ? "⚠ " : ""}${b.name}</b><span class="t">${fmt(b.s)} – ${fmt(b.e)}${b.sub ? " · " + b.sub : ""}</span></${tag}>`;
+  }).join("");
+  const sel = plan.find(p => p.u === selU && p.day === d.id);
+  el.innerHTML = `<div class="dayhead"><div><p class="eyebrow">${d.date}${d.bday ? " · Diane's birthday" : ""}${d.dressy ? " · Dressy night" : ""}</p><h2>${d.name}</h2></div><span class="sub">${itemsOn(d.id).length} planned</span></div>
+    <div class="facts">${facts.join("")}</div>
+    <div class="tl" style="height:${hgt}px">${g}</div>
+    <div class="legend"><span><i style="background:var(--c-exc)"></i>Excursion / ashore</span><span><i style="background:var(--c-dine)"></i>Dining</span><span><i style="background:var(--c-ship)"></i>On board</span><span><i style="background:var(--c-sea)"></i>Seattle</span><span><i style="background:var(--port)"></i>Ship in port</span><span><i style="background:var(--red)"></i>All aboard</span></div>
+    ${sel ? editorHTML(sel) : `<p class="empty" style="margin-top:12px">Tap a block to change its time or remove it. Add things from the list on the right${innerWidth < 1100 ? " (below)" : ""}.</p>`}`;
+  el.querySelectorAll("button.blk").forEach(b => b.addEventListener("click", () => { selU = b.dataset.u; renderDay(); }));
+  if (sel) wireEditor(sel);
+}
+function timeOptions(d, o, cur) {
+  const [v0, v1] = d.view; let h = "";
+  for (let m = v0; m + 15 <= v1; m += 15) h += `<option value="${m}" ${m === cur ? "selected" : ""}>${fmt(m)}</option>`;
+  return h;
+}
+function peopleOptions(cur) { return [1, 2, 3, 4].map(n => `<option value="${n}" ${n === cur ? "selected" : ""}>${n}</option>`).join(""); }
+function editorHTML(p) {
+  const o = OPT[p.opt], d = dayOf(p.day), pr = problems(p), c = costOf(p), url = linkFor(o);
+  return `<div class="editor" id="editor">
+    <div class="row" style="justify-content:space-between"><b>${o.name}</b>${url ? `<a href="${url}" target="_blank" rel="noopener" style="font-size:.82rem;font-weight:600">Details ↗</a>` : ""}</div>
+    <div class="row">
+      <label for="edStart">Start <select id="edStart">${timeOptions(d, o, p.start)}</select></label>
+      <span class="mono" style="font-size:.82rem">→ ends ${fmt(p.start + o.dur)}</span>
+      ${o.price !== 0 && !o.perVehicle ? `<label for="edPeople">People <select id="edPeople">${peopleOptions(p.people)}</select></label>` : ""}
+      ${c != null && c > 0 ? `<span class="mono" style="font-size:.82rem">${money(c)}${o.perVehicle ? " per vehicle" : ""}</span>` : ""}
+      <button type="button" class="btn" id="edRemove">Remove</button>
+      <button type="button" class="btn" id="edDone">Done</button>
+    </div>
+    <p class="msg ${pr.length ? "" : "ok"}">${pr.length ? pr.map(x => "⚠ " + x).join("<br>") : "✓ Fits the day."}</p>
+  </div>`;
+}
+function wireEditor(p) {
+  document.getElementById("edStart").addEventListener("change", e => { p.start = +e.target.value; changed(); });
+  const pe = document.getElementById("edPeople"); if (pe) pe.addEventListener("change", e => { p.people = +e.target.value; changed(); });
+  document.getElementById("edRemove").addEventListener("click", () => { plan = plan.filter(x => x !== p); selU = null; changed(); status("Removed."); });
+  document.getElementById("edDone").addEventListener("click", () => { selU = null; render(); });
+}
+function linkFor(o) {
+  if (o.kind === "exc" && typeof exUrl === "function") { const u = exUrl(o.ctx, o.name); if (u) return u; }
+  return null;
+}
+function suggestStart(o, d) {
+  if ((o.kind === "exc" || o.kind === "own") && d.port) return Math.ceil(d.port.earliest / 15) * 15;
+  if (o.hours) return o.hours[0];
+  const w = d.window[o.ctx === "seattle" ? "seattle" : "ship"];
+  return w ? w[0] : d.view[0];
+}
+function renderAdd() {
+  const d = dayOf(curDay), el = document.getElementById("addpane");
+  const avail = O.filter(o => placeFor(o, d));
+  const groups = [...new Set(avail.map(o => o.kind))];
+  if (!tab || !groups.includes(tab)) tab = groups[0];
+  if (!avail.length) { el.innerHTML = `<h3>Add to ${d.date}</h3><p class="empty">Travel day: nothing to add. Fixed events are shown on the timeline.</p>`; return; }
+  const list = avail.filter(o => o.kind === tab);
+  const inPlan = new Set(itemsOn(d.id).map(p => p.opt));
+  el.innerHTML = `<h3>Add to ${d.date}</h3>
+    <div class="tabs" role="group" aria-label="Category">${groups.map(g => `<button type="button" class="tab" data-tab="${g}" aria-pressed="${g === tab}">${KIND[g][0]}</button>`).join("")}</div>
+    <div class="opts">${list.map(o => {
+      const url = linkFor(o), def = suggestStart(o, d);
+      const price = o.price == null ? "varies" : o.price === 0 ? "free / incl." : (o.est ? "~" : "") + money(o.price) + (o.perVehicle ? "/vehicle" : o.kind === "dine" ? " pp*" : " pp");
+      return `<div class="opt ${inPlan.has(o.id) ? "in" : ""}">
+        <div class="h"><b>${o.name}</b><span class="p">${price}</span></div>
+        <div class="m"><span>${o.dur >= 60 ? (o.dur / 60).toFixed(o.dur % 60 ? 2 : 0).replace(/\.?0+$/, "") + " hr" : o.dur + " min"}</span>${o.lvl ? `<span class="lvl${o.lvl}">${{ E: "Easy", M: "Moderate", S: "Strenuous" }[o.lvl]}</span>` : ""}${o.pick ? `<span style="color:var(--gold);font-weight:700">Our pick</span>` : ""}${o.note ? `<span>${o.note}</span>` : ""}${url ? `<a href="${url}" target="_blank" rel="noopener">Details ↗</a>` : ""}${inPlan.has(o.id) ? `<span><b>In plan</b></span>` : ""}</div>
+        <div class="addrow"><label class="sr" for="t_${o.id}" style="font-size:.76rem">Start</label><select id="t_${o.id}">${timeOptions(d, o, def)}</select><button type="button" class="add" data-opt="${o.id}">Add</button></div>
+      </div>`;
+    }).join("")}</div>
+    <p class="note">${tab === "dine" ? "* Specialty dining prices include the 20% service charge." : (tab === "exc" ? "Holland America 2026 prices per adult. Times are your planned start; the actual tour times are set when you book." : "")}</p>`;
+  el.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => { tab = b.dataset.tab; renderAdd(); }));
+  el.querySelectorAll(".add").forEach(b => b.addEventListener("click", () => {
+    const o = OPT[b.dataset.opt], start = +document.getElementById("t_" + o.id).value;
+    const p = { u: uid(), day: d.id, opt: o.id, start, people: PARTY };
+    plan.push(p); selU = p.u; changed();
+    const pr = problems(p); status(pr.length ? `Added, but check it: ${pr[0]}` : `Added ${o.name} at ${fmt(start)}.`);
+  }));
+}
+function renderSummary() {
+  const el = document.getElementById("summary");
+  let exc = 0, dine = 0, other = 0, unknown = 0;
+  const days = DAYS.map(d => {
+    const rows = [
+      ...d.fixed.map(f => ({ s: f[2], e: f[3], fixed: true, name: f[0] })),
+      ...itemsOn(d.id).map(p => ({ s: p.start, e: p.start + OPT[p.opt].dur, p, name: OPT[p.opt].name }))
+    ].sort((a, b) => a.s - b.s);
+    if (d.port) rows.push({ s: d.port.aboard, e: d.port.aboard, fixed: true, name: `All aboard (${d.port.name})`, aboard: true });
+    rows.sort((a, b) => a.s - b.s);
+    let bad = false;
+    const lis = rows.map(r => {
+      if (r.fixed) return `<li class="fx"><span class="tm">${fmt(r.s)}${r.aboard ? "" : "–" + fmt(r.e)}</span><span>${r.name}</span></li>`;
+      const pr = problems(r.p); if (pr.length) bad = true;
+      const c = costOf(r.p), o = OPT[r.p.opt];
+      if (c == null) unknown++; else if (o.kind === "exc" || o.kind === "own") exc += c; else if (o.kind === "dine" || o.kind === "sdine") dine += c; else other += c;
+      return `<li class="${pr.length ? "warn" : ""}"><span class="tm">${fmt(r.s)}–${fmt(r.e)}</span><span>${pr.length ? "⚠ " : ""}${r.name}${r.p.people < 4 && o.price ? ` <span style="color:var(--muted)">(${r.p.people} people)</span>` : ""}</span></li>`;
+    }).join("");
+    return `<div class="sday ${bad ? "bad" : ""}"><div class="hd"><b>${d.name}</b><span>${d.date}</span></div>${d.port ? `<p class="pw">In port ${fmt(d.port.arrive)} – ${fmt(d.port.depart)} · all aboard ${fmt(d.port.aboard)}</p>` : ""}<ul>${lis || `<li class="fx"><span class="tm"></span><span>Nothing planned yet</span></li>`}</ul></div>`;
+  }).join("");
+  el.innerHTML = `<div class="sh"><div><p class="eyebrow">One page</p><h2>Our trip at a glance</h2></div><span class="status">${plan.length} things planned · ${allProblems().length ? `<b style="color:var(--red)">${allProblems().length} to fix</b>` : "no conflicts"}</span></div>
+    <div class="sumgrid">${days}</div>
+    <div class="totals"><div class="tot"><b>${money(exc)}</b><span>Excursions, for those going</span></div><div class="tot"><b>${money(dine)}</b><span>Specialty dining &amp; extras</span></div><div class="tot"><b>${money(other)}</b><span>Seattle attractions</span></div><div class="tot"><b>${money(exc + dine + other)}</b><span>Total planned extras</span></div></div>
+    <p class="note">Excursions use Holland America's 2026 per-adult prices × number of people (vehicles are per vehicle). Specialty dining includes the 20% service charge. ${unknown ? unknown + " item(s) with variable prices (Seattle restaurants, Tracy's, etc.) aren't included. " : ""}Cruise fare, flights and hotel aren't included here; see the guide's Costs chapter.</p>`;
+}
+function changed() { isStarter = false; save(); render(); }
+
+/* ---------------- Toolbar ---------------- */
+document.getElementById("share").addEventListener("click", async () => {
+  const url = location.origin + location.pathname + "#plan=" + encodePlan();
+  history.replaceState(null, "", "#plan=" + encodePlan());
+  try { await navigator.clipboard.writeText(url); status("Link copied. Paste it in a text or email to share this plan."); }
+  catch (e) { status("Copy this link from the address bar to share the plan."); }
+});
+document.getElementById("print").addEventListener("click", () => window.print());
+document.getElementById("starter").addEventListener("click", () => { plan = fromStarter(); isStarter = true; selU = null; save(); render(); status("Loaded our suggested plan."); });
+document.getElementById("clear").addEventListener("click", e => {
+  const b = e.currentTarget;
+  if (b.dataset.armed) { plan = []; isStarter = false; selU = null; delete b.dataset.armed; b.textContent = "Clear everything"; save(); render(); status("Cleared. Start adding from the list."); return; }
+  b.dataset.armed = "1"; b.textContent = "Tap again to clear"; setTimeout(() => { delete b.dataset.armed; b.textContent = "Clear everything"; }, 3000);
+});
+
+load(); render();
+</script>
+
+<script>
+/* Site-wide auto-linker: turns mentions of hotels, restaurants, attractions, ships, airlines
+   and ports into links. Runs on load and again whenever a page re-renders (e.g. filters). */
+(() => {
+  const LINKS = [
+    // Ports on this site
+    ["Juneau", "/juneau/"], ["Icy Strait Point", "/icy-strait/"], ["Glacier Bay", "/icy-strait/"],
+    ["Sitka", "/sitka/"], ["Ketchikan", "/ketchikan/"], ["Victoria", "/victoria/"],
+    // Seattle hotels
+    ["The Edgewater", "https://www.edgewaterhotel.com/"], ["Edgewater", "https://www.edgewaterhotel.com/"],
+    ["Four Seasons Seattle", "https://www.fourseasons.com/seattle/"], ["Four Seasons", "https://www.fourseasons.com/seattle/"],
+    ["Fairmont Olympic", "https://www.fairmont.com/seattle/"], ["Inn at the Market", "https://innatthemarket.com/"],
+    ["Mayflower Park Hotel", "https://mayflowerpark.com/"], ["Mayflower Park", "https://mayflowerpark.com/"],
+    ["Hotel Ändra", "https://hotelandra.com/"], ["Kimpton Palladian", "https://www.palladianhotel.com/"],
+    ["Mediterranean Inn", "https://www.mediterranean-inn.com/"],
+    // Seattle restaurants
+    ["Six Seven", "https://www.edgewaterhotel.com/dine/six-seven-restaurant"], ["Canlis", "https://canlis.com/"],
+    ["The Pink Door", "https://www.thepinkdoor.net/"], ["Pink Door", "https://www.thepinkdoor.net/"],
+    ["Matt's in the Market", "https://www.mattsinthemarket.com/"], ["Elliott's Oyster House", "https://www.elliottsoysterhouse.com/"],
+    ["Elliott's", "https://www.elliottsoysterhouse.com/"], ["Sushi Kashiba", "https://sushikashiba.com/"],
+    ["Ivar's Acres of Clams", "https://www.ivars.com/acres"], ["Ivar's", "https://www.ivars.com/acres"],
+    ["Pike Place Chowder", "https://www.pikeplacechowder.com/"], ["Pike Place Fish", "https://www.pikeplacefish.com/"],
+    ["Goldfinch Tavern", "https://www.goldfinchtavern.com/"], ["Café Campagne", "https://www.cafecampagne.com/"],
+    ["OpenTable", "https://www.opentable.com/"], ["Tock", "https://www.exploretock.com/"],
+    // Seattle sights & transport
+    ["Pike Place Market", "https://www.pikeplacemarket.org/"], ["Pike Place", "https://www.pikeplacemarket.org/"],
+    ["Overlook Walk", "https://waterfrontparkseattle.org/overlook-walk/"], ["Seattle Aquarium", "https://www.seattleaquarium.org/"],
+    ["Seattle Great Wheel", "https://seattlegreatwheel.com/"], ["Great Wheel", "https://seattlegreatwheel.com/"],
+    ["Argosy Harbor Cruise", "https://www.argosycruises.com/"], ["Argosy", "https://www.argosycruises.com/"],
+    ["Space Needle", "https://www.spaceneedle.com/"], ["Chihuly Garden and Glass", "https://www.chihulygardenandglass.com/"],
+    ["Kerry Park", "https://www.seattle.gov/parks/allparks/kerry-park"],
+    ["Link light rail", "https://www.soundtransit.org/ride-with-us/routes-schedules/1-line"],
+    ["Port Valet", "https://www.portseattle.org/page/port-valet-enjoy-seattle-luggage-free"],
+    ["Smith Cove", "https://www.portseattle.org/maritime/cruise"], ["Pier 91", "https://www.portseattle.org/maritime/cruise"],
+    ["Seattle-Tacoma", "https://www.portseattle.org/sea-tac"], ["Google Flights", "https://www.google.com/travel/flights"],
+    // Airlines
+    ["Alaska Airlines", "https://www.alaskaair.com/"], ["Delta", "https://www.delta.com/"], ["JetBlue", "https://www.jetblue.com/"],
+    // Cruise lines & ships
+    ["Holland America Line", "https://www.hollandamerica.com/"], ["Holland America", "https://www.hollandamerica.com/"],
+    ["Eurodam", "https://www.hollandamerica.com/en/us/cruise-ships/eurodam/0"],
+    ["Koningsdam", "https://www.hollandamerica.com/en/us/cruise-ships/koningsdam"],
+    ["Zaandam", "https://www.hollandamerica.com/en/us/cruise-ships/zaandam"],
+    ["Princess Cruises", "https://www.princess.com/"],
+    ["Royal Princess", "https://www.princess.com/ships-and-experience/ships/rp-royal-princess/"],
+    ["Crown Princess", "https://www.princess.com/ships-and-experience/ships/kp-crown-princess/"],
+    ["Coral Princess", "https://www.princess.com/ships-and-experience/ships/co-coral-princess/"],
+    ["Star Princess", "https://www.princess.com/ships-and-experience/ships/st-star-princess/"],
+    ["Norwegian Cruise Line", "https://www.ncl.com/"], ["Norwegian Encore", "https://www.ncl.com/cruise-ships/norwegian-encore"],
+    ["Norwegian Bliss", "https://www.ncl.com/cruise-ships/norwegian-bliss"],
+    ["Celebrity Cruises", "https://www.celebritycruises.com/"], ["Celebrity Edge", "https://www.celebritycruises.com/cruise-ships/celebrity-edge"],
+    ["Royal Caribbean", "https://www.royalcaribbean.com/"], ["Voyager of the Seas", "https://www.royalcaribbean.com/cruise-ships/voyager-of-the-seas"],
+    ["Disney Cruise Line", "https://disneycruise.disney.go.com/"], ["Disney Wonder", "https://disneycruise.disney.go.com/ships/wonder/"],
+    ["Viking Orion", "https://www.vikingcruises.com/oceans/ships/viking-orion.html"], ["Viking", "https://www.vikingcruises.com/"],
+    // Eurodam onboard
+    ["Pinnacle Grill", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/pinnacle-grill"],
+    ["Tamarind", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/tamarind"],
+    ["Morimoto by Sea", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/morimoto-by-sea-pop-up"],
+    ["Rolling Stone Lounge", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/rolling-stone-lounge"],
+    ["Billboard Onboard", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/billboard-onboard"],
+    ["Have It All", "https://www.hollandamerica.com/en/us/cruise-deals/have-it-all"],
+    // Alaska & BC sights
+    ["Glacier Bay National Park", "https://www.nps.gov/glba/"],
+    ["Mendenhall Glacier", "https://www.fs.usda.gov/r10/tongass/offices/mendenhall-glacier-visitor-center"],
+    ["Mendenhall", "https://www.fs.usda.gov/r10/tongass/offices/mendenhall-glacier-visitor-center"],
+    ["Glacier Gardens", "https://www.glaciergardens.com/"], ["Goldbelt Tram", "https://goldbelttram.com/"],
+    ["Mount Roberts Tramway", "https://goldbelttram.com/"], ["Mount Roberts", "https://goldbelttram.com/"],
+    ["Alaska State Museum", "https://museums.alaska.gov/"], ["Taku Lodge", "https://www.takulodge.com/"],
+    ["Tracy's King Crab Shack", "https://www.kingcrabshack.com/"], ["Red Dog Saloon", "https://www.reddogsaloon.com/"],
+    ["Fortress of the Bear", "https://www.fortressofthebear.org/"], ["Alaska Raptor Center", "https://alaskaraptor.org/"],
+    ["Raptor Center", "https://alaskaraptor.org/"], ["Sitka National Historical Park", "https://www.nps.gov/sitk/"],
+    ["Sheldon Jackson Museum", "https://museums.alaska.gov/sheldon_jackson/"], ["Sitka Sound Science Center", "https://sitkascience.org/"],
+    ["New Archangel Dancers", "https://www.newarchangeldancers.com/"], ["Visit Sitka", "https://www.visitsitka.org/"],
+    ["Totem Heritage Center", "http://ketchikanmuseums.org/"], ["Great Alaskan Lumberjack Show", "https://www.alaskanlumberjackshow.com/"],
+    ["Misty Fjords", "https://www.fs.usda.gov/recarea/tongass/recarea/?recid=79428"],
+    ["White Pass & Yukon Route", "https://wpyr.com/"], ["White Pass", "https://wpyr.com/"],
+    ["Klondike Gold Rush National Historical Park", "https://www.nps.gov/klgo/"],
+    ["Butchart Gardens", "https://www.butchartgardens.com/"], ["Butchart", "https://www.butchartgardens.com/"],
+    ["Fairmont Empress", "https://www.fairmont.com/empress-victoria/"], ["Craigdarroch Castle", "https://thecastle.ca/"],
+    ["Alaska Wildlife Conservation Center", "https://www.alaskawildlife.org/"], ["Denali", "https://www.nps.gov/dena/"],
+    ["Capilano Suspension Bridge", "https://www.capbridge.com/"]
+  ];
+  const here = location.pathname.replace(/index\.html$/, "");
+  const items = LINKS.filter(([, u]) => u !== here).sort((a, b) => b[0].length - a[0].length);
+  const url = new Map(items);
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(items.map(([p]) => esc(p)).join("|"), "g");
+  const isWord = c => !!c && /[A-Za-z0-9À-ÿ]/.test(c);
+  const SKIP = "a,button,script,style,title,h1,h2,nav,figcaption,textarea,select,option,label,footer,.credit,.credit2,.photo-credit,.filters,.jump,.sitenav,.portnav,[data-nolink]";
+  const BLOCK = "p,li,td,th,dd,dt,h3,h4,figure,blockquote";
+  const done = new WeakMap();
+
+  function linkify(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => (!n.nodeValue.trim() || !n.parentElement || n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      const text = node.nodeValue;
+      re.lastIndex = 0;
+      if (!re.test(text)) continue;
+      const block = node.parentElement.closest(BLOCK) || node.parentElement.closest("div,section,article") || document.body;
+      let used = done.get(block); if (!used) done.set(block, used = new Set());
+      const frag = document.createDocumentFragment();
+      let last = 0, changed = false, m;
+      re.lastIndex = 0;
+      while ((m = re.exec(text))) {
+        const p = m[0], s = m.index, e = s + p.length;
+        if (isWord(text[s - 1]) || isWord(text[e]) || used.has(p)) continue;
+        const href = url.get(p);
+        used.add(p); changed = true;
+        frag.append(text.slice(last, s));
+        const a = document.createElement("a");
+        a.href = href; a.textContent = p; a.className = "autolink";
+        if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener"; }
+        frag.append(a);
+        last = e;
+      }
+      if (!changed) continue;
+      frag.append(text.slice(last));
+      node.replaceWith(frag);
+    }
+  }
+  const style = document.createElement("style");
+  style.textContent = "a.autolink{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent)}a.autolink:hover,a.autolink:focus-visible{text-decoration-color:currentColor;text-decoration-thickness:2px}";
+  document.head.append(style);
+  const run = () => linkify(document.body);
+  let t; const obs = new MutationObserver(() => { clearTimeout(t); t = setTimeout(run, 60); });
+  const start = () => { run(); obs.observe(document.body, { childList: true, subtree: true }); };
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start) : start();
+})();
+
+</script>
+</body>
+</html>
