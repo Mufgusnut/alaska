@@ -61,6 +61,7 @@ header.top p{color:var(--muted);max-width:75ch}
 .btn.primary{background:var(--navy);border-color:var(--navy);color:var(--card)}
 .btn:focus-visible,.dayb:focus-visible,.opt:focus-visible,.blk:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
 .status{font-size:.82rem;color:var(--muted)}
+.sharebox{display:grid;gap:4px;margin-top:8px;max-width:760px}.sharebox label{font-size:.8rem;font-weight:600}.sharebox input{width:100%;border:1px solid var(--navy);border-radius:8px;padding:7px 10px;font-family:var(--f-mono);font-size:.76rem;background:var(--card)}
 .starter{font-size:.78rem;font-weight:700;color:var(--gold);background:var(--gold-soft);padding:3px 10px;border-radius:99px}
 
 .alerts{margin:10px 0 16px;border-radius:12px;padding:12px 16px;background:var(--red-soft);display:grid;gap:6px}
@@ -198,6 +199,7 @@ header.top p{color:var(--muted);max-width:75ch}
       <span class="starter" id="starterTag" hidden>Showing our suggested plan</span>
       <span class="status" id="status" role="status"></span>
     </div>
+    <div class="sharebox" id="sharebox" hidden><label for="shareurl">Link to this plan. Copy it and send it to the family:</label><input id="shareurl" readonly></div>
   </header>
 
   <div class="alerts" id="alerts" aria-live="polite"></div>
@@ -570,6 +572,8 @@ function changed() { isStarter = false; save(); render(); }
 document.getElementById("share").addEventListener("click", async () => {
   const url = location.origin + location.pathname + "#plan=" + encodePlan();
   history.replaceState(null, "", "#plan=" + encodePlan());
+  const box = document.getElementById("sharebox"), inp = document.getElementById("shareurl");
+  box.hidden = false; inp.value = url; inp.focus(); inp.select();
   try { await navigator.clipboard.writeText(url); status("Link copied. Paste it in a text or email to share this plan."); }
   catch (e) { status("Copy this link from the address bar to share the plan."); }
 });
