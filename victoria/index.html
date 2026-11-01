@@ -280,5 +280,138 @@ footer{padding-block:30px 44px;border-top:1px solid var(--line);font-size:.78rem
   <div class="wrap">Excursion details from Holland America's Victoria shore excursion pages (2026 season), compiled November 2026. Photos via Wikimedia Commons: BC Parliament Buildings by Michal Klajban (CC BY-SA 4.0); Butchart Gardens by Warfieldian (CC BY-SA 3.0).</div>
 </footer>
 
+<script>
+/* Site-wide auto-linker: turns mentions of hotels, restaurants, attractions, ships, airlines
+   and ports into links. Runs on load and again whenever a page re-renders (e.g. filters). */
+(() => {
+  const LINKS = [
+    // Ports on this site
+    ["Juneau", "/juneau/"], ["Icy Strait Point", "/icy-strait/"], ["Glacier Bay", "/icy-strait/"],
+    ["Sitka", "/sitka/"], ["Ketchikan", "/ketchikan/"], ["Victoria", "/victoria/"],
+    // Seattle hotels
+    ["The Edgewater", "https://www.edgewaterhotel.com/"], ["Edgewater", "https://www.edgewaterhotel.com/"],
+    ["Four Seasons Seattle", "https://www.fourseasons.com/seattle/"], ["Four Seasons", "https://www.fourseasons.com/seattle/"],
+    ["Fairmont Olympic", "https://www.fairmont.com/seattle/"], ["Inn at the Market", "https://innatthemarket.com/"],
+    ["Mayflower Park Hotel", "https://mayflowerpark.com/"], ["Mayflower Park", "https://mayflowerpark.com/"],
+    ["Hotel Ändra", "https://hotelandra.com/"], ["Kimpton Palladian", "https://www.palladianhotel.com/"],
+    ["Mediterranean Inn", "https://www.mediterranean-inn.com/"],
+    // Seattle restaurants
+    ["Six Seven", "https://www.edgewaterhotel.com/dine/six-seven-restaurant"], ["Canlis", "https://canlis.com/"],
+    ["The Pink Door", "https://www.thepinkdoor.net/"], ["Pink Door", "https://www.thepinkdoor.net/"],
+    ["Matt's in the Market", "https://www.mattsinthemarket.com/"], ["Elliott's Oyster House", "https://www.elliottsoysterhouse.com/"],
+    ["Elliott's", "https://www.elliottsoysterhouse.com/"], ["Sushi Kashiba", "https://sushikashiba.com/"],
+    ["Ivar's Acres of Clams", "https://www.ivars.com/acres"], ["Ivar's", "https://www.ivars.com/acres"],
+    ["Pike Place Chowder", "https://www.pikeplacechowder.com/"], ["Pike Place Fish", "https://www.pikeplacefish.com/"],
+    ["Goldfinch Tavern", "https://www.goldfinchtavern.com/"], ["Café Campagne", "https://www.cafecampagne.com/"],
+    ["OpenTable", "https://www.opentable.com/"], ["Tock", "https://www.exploretock.com/"],
+    // Seattle sights & transport
+    ["Pike Place Market", "https://www.pikeplacemarket.org/"], ["Pike Place", "https://www.pikeplacemarket.org/"],
+    ["Overlook Walk", "https://waterfrontparkseattle.org/overlook-walk/"], ["Seattle Aquarium", "https://www.seattleaquarium.org/"],
+    ["Seattle Great Wheel", "https://seattlegreatwheel.com/"], ["Great Wheel", "https://seattlegreatwheel.com/"],
+    ["Argosy Harbor Cruise", "https://www.argosycruises.com/"], ["Argosy", "https://www.argosycruises.com/"],
+    ["Space Needle", "https://www.spaceneedle.com/"], ["Chihuly Garden and Glass", "https://www.chihulygardenandglass.com/"],
+    ["Kerry Park", "https://www.seattle.gov/parks/allparks/kerry-park"],
+    ["Link light rail", "https://www.soundtransit.org/ride-with-us/routes-schedules/1-line"],
+    ["Port Valet", "https://www.portseattle.org/page/port-valet-enjoy-seattle-luggage-free"],
+    ["Smith Cove", "https://www.portseattle.org/maritime/cruise"], ["Pier 91", "https://www.portseattle.org/maritime/cruise"],
+    ["Seattle-Tacoma", "https://www.portseattle.org/sea-tac"], ["Google Flights", "https://www.google.com/travel/flights"],
+    // Airlines
+    ["Alaska Airlines", "https://www.alaskaair.com/"], ["Delta", "https://www.delta.com/"], ["JetBlue", "https://www.jetblue.com/"],
+    // Cruise lines & ships
+    ["Holland America Line", "https://www.hollandamerica.com/"], ["Holland America", "https://www.hollandamerica.com/"],
+    ["Eurodam", "https://www.hollandamerica.com/en/us/cruise-ships/eurodam/0"],
+    ["Koningsdam", "https://www.hollandamerica.com/en/us/cruise-ships/koningsdam"],
+    ["Zaandam", "https://www.hollandamerica.com/en/us/cruise-ships/zaandam"],
+    ["Princess Cruises", "https://www.princess.com/"],
+    ["Royal Princess", "https://www.princess.com/ships-and-experience/ships/rp-royal-princess/"],
+    ["Crown Princess", "https://www.princess.com/ships-and-experience/ships/kp-crown-princess/"],
+    ["Coral Princess", "https://www.princess.com/ships-and-experience/ships/co-coral-princess/"],
+    ["Star Princess", "https://www.princess.com/ships-and-experience/ships/st-star-princess/"],
+    ["Norwegian Cruise Line", "https://www.ncl.com/"], ["Norwegian Encore", "https://www.ncl.com/cruise-ships/norwegian-encore"],
+    ["Norwegian Bliss", "https://www.ncl.com/cruise-ships/norwegian-bliss"],
+    ["Celebrity Cruises", "https://www.celebritycruises.com/"], ["Celebrity Edge", "https://www.celebritycruises.com/cruise-ships/celebrity-edge"],
+    ["Royal Caribbean", "https://www.royalcaribbean.com/"], ["Voyager of the Seas", "https://www.royalcaribbean.com/cruise-ships/voyager-of-the-seas"],
+    ["Disney Cruise Line", "https://disneycruise.disney.go.com/"], ["Disney Wonder", "https://disneycruise.disney.go.com/ships/wonder/"],
+    ["Viking Orion", "https://www.vikingcruises.com/oceans/ships/viking-orion.html"], ["Viking", "https://www.vikingcruises.com/"],
+    // Eurodam onboard
+    ["Pinnacle Grill", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/pinnacle-grill"],
+    ["Tamarind", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/tamarind"],
+    ["Morimoto by Sea", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/morimoto-by-sea-pop-up"],
+    ["Rolling Stone Lounge", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/rolling-stone-lounge"],
+    ["Billboard Onboard", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/billboard-onboard"],
+    ["Have It All", "https://www.hollandamerica.com/en/us/cruise-deals/have-it-all"],
+    // Alaska & BC sights
+    ["Glacier Bay National Park", "https://www.nps.gov/glba/"],
+    ["Mendenhall Glacier", "https://www.fs.usda.gov/r10/tongass/offices/mendenhall-glacier-visitor-center"],
+    ["Mendenhall", "https://www.fs.usda.gov/r10/tongass/offices/mendenhall-glacier-visitor-center"],
+    ["Glacier Gardens", "https://www.glaciergardens.com/"], ["Goldbelt Tram", "https://goldbelttram.com/"],
+    ["Mount Roberts Tramway", "https://goldbelttram.com/"], ["Mount Roberts", "https://goldbelttram.com/"],
+    ["Alaska State Museum", "https://museums.alaska.gov/"], ["Taku Lodge", "https://www.takulodge.com/"],
+    ["Tracy's King Crab Shack", "https://www.kingcrabshack.com/"], ["Red Dog Saloon", "https://www.reddogsaloon.com/"],
+    ["Fortress of the Bear", "https://www.fortressofthebear.org/"], ["Alaska Raptor Center", "https://alaskaraptor.org/"],
+    ["Raptor Center", "https://alaskaraptor.org/"], ["Sitka National Historical Park", "https://www.nps.gov/sitk/"],
+    ["Sheldon Jackson Museum", "https://museums.alaska.gov/sheldon_jackson/"], ["Sitka Sound Science Center", "https://sitkascience.org/"],
+    ["New Archangel Dancers", "https://www.newarchangeldancers.com/"], ["Visit Sitka", "https://www.visitsitka.org/"],
+    ["Totem Heritage Center", "http://ketchikanmuseums.org/"], ["Great Alaskan Lumberjack Show", "https://www.alaskanlumberjackshow.com/"],
+    ["Misty Fjords", "https://www.fs.usda.gov/recarea/tongass/recarea/?recid=79428"],
+    ["White Pass & Yukon Route", "https://wpyr.com/"], ["White Pass", "https://wpyr.com/"],
+    ["Klondike Gold Rush National Historical Park", "https://www.nps.gov/klgo/"],
+    ["Butchart Gardens", "https://www.butchartgardens.com/"], ["Butchart", "https://www.butchartgardens.com/"],
+    ["Fairmont Empress", "https://www.fairmont.com/empress-victoria/"], ["Craigdarroch Castle", "https://thecastle.ca/"],
+    ["Alaska Wildlife Conservation Center", "https://www.alaskawildlife.org/"], ["Denali", "https://www.nps.gov/dena/"],
+    ["Capilano Suspension Bridge", "https://www.capbridge.com/"]
+  ];
+  const here = location.pathname.replace(/index\.html$/, "");
+  const items = LINKS.filter(([, u]) => u !== here).sort((a, b) => b[0].length - a[0].length);
+  const url = new Map(items);
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(items.map(([p]) => esc(p)).join("|"), "g");
+  const isWord = c => !!c && /[A-Za-z0-9À-ÿ]/.test(c);
+  const SKIP = "a,button,script,style,title,h1,h2,nav,figcaption,textarea,select,option,label,footer,.credit,.credit2,.photo-credit,.filters,.jump,.sitenav,.portnav,[data-nolink]";
+  const BLOCK = "p,li,td,th,dd,dt,h3,h4,figure,blockquote";
+  const done = new WeakMap();
+
+  function linkify(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => (!n.nodeValue.trim() || !n.parentElement || n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      const text = node.nodeValue;
+      re.lastIndex = 0;
+      if (!re.test(text)) continue;
+      const block = node.parentElement.closest(BLOCK) || node.parentElement.closest("div,section,article") || document.body;
+      let used = done.get(block); if (!used) done.set(block, used = new Set());
+      const frag = document.createDocumentFragment();
+      let last = 0, changed = false, m;
+      re.lastIndex = 0;
+      while ((m = re.exec(text))) {
+        const p = m[0], s = m.index, e = s + p.length;
+        if (isWord(text[s - 1]) || isWord(text[e]) || used.has(p)) continue;
+        const href = url.get(p);
+        used.add(p); changed = true;
+        frag.append(text.slice(last, s));
+        const a = document.createElement("a");
+        a.href = href; a.textContent = p; a.className = "autolink";
+        if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener"; }
+        frag.append(a);
+        last = e;
+      }
+      if (!changed) continue;
+      frag.append(text.slice(last));
+      node.replaceWith(frag);
+    }
+  }
+  const style = document.createElement("style");
+  style.textContent = "a.autolink{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent)}a.autolink:hover,a.autolink:focus-visible{text-decoration-color:currentColor;text-decoration-thickness:2px}";
+  document.head.append(style);
+  const run = () => linkify(document.body);
+  let t; const obs = new MutationObserver(() => { clearTimeout(t); t = setTimeout(run, 60); });
+  const start = () => { run(); obs.observe(document.body, { childList: true, subtree: true }); };
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start) : start();
+})();
+
+</script>
 </body>
 </html>
