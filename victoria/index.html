@@ -164,6 +164,10 @@ footer{padding-block:30px 44px;border-top:1px solid var(--line);font-size:.78rem
 @media (max-width:520px){
   .rung{grid-template-columns:1fr;gap:2px}
 }
+.ex h4 a,.pick h3 a,.exname a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb, currentColor 30%, transparent);text-underline-offset:3px}
+.ex h4 a:hover,.pick h3 a:hover,.exname a:hover{color:var(--navy);text-decoration-color:currentColor}
+.ex .book,.pick .book{justify-self:start;font-size:.82rem;font-weight:600;color:var(--navy);text-decoration:none}
+.ex .book:hover,.pick .book:hover{text-decoration:underline}
 
 .tag.S{background:var(--rose-soft);color:var(--rose)}
 .tag.fitN{background:var(--rose-soft);color:var(--red)}
