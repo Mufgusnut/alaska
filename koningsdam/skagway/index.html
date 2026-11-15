@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+/*sitenav*/
+.sitenav{background:#141b2b;color:#e8ebf0;font:600 13px/1.4 "Figtree","Segoe UI",system-ui,sans-serif}
+.sitenav a{color:#c9d3e2;text-decoration:none}
+.sitenav a:hover,.sitenav a:focus-visible{color:#fff}
+.sn-top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0 4px;padding:8px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+.sn-top b{font-family:"Gloock",Georgia,serif;font-weight:400;font-size:16px;color:#ffc2a8;margin-right:14px;padding-bottom:9px;white-space:nowrap}
+.sn-tab{padding:8px 16px 9px;border-radius:9px 9px 0 0;font-size:14px;white-space:nowrap}
+.sn-tab[aria-current]{background:#253049;color:#fff;box-shadow:inset 0 3px 0 #ffc2a8}
+.sn-sub{display:flex;flex-wrap:wrap;gap:4px 20px;padding:9px max(16px,env(safe-area-inset-right,0px)) 9px max(16px,env(safe-area-inset-left,0px));background:#253049}
+.sn-sub a{padding:2px 0;border-bottom:2px solid transparent}
+.sn-sub a[aria-current]{color:#fff;border-bottom-color:#ffc2a8}
+@media (max-width:520px){.sn-top b{flex-basis:100%;padding-bottom:4px}.sn-tab{padding-inline:12px}}
+@media print{.sitenav{display:none}}
+/*endsitenav*/
+</style>
+<title>Skagway Excursions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: port brochure in the Alaska family. Breaching-whale cover, port-at-a-glance strip, top-3 spotlight, excursions grouped by theme as cards, a price ladder, three sample afternoons, and on-your-own ideas over a Mendenhall photo band. */
+:root{
+  --paper:#f2f4f6;
+  --card:#ffffff;
+  --ink:#1b2333;
+  --muted:#5a6476;
+  --line:#d8dde5;
+  --navy:#1f5f99;
+  --navy-soft:#e3edf7;
+  --rose:#b8466a;
+  --rose-soft:#f6e3ea;
+  --teal:#2b7a82;
+  --teal-soft:#e0eff0;
+  --gold:#a8701c;
+  --gold-soft:#f7ecd9;
+  --red:#b23b3b;
+  --f-display:"Gloock", "Georgia", "Times New Roman", serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"DM Mono", "Consolas", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#10151e; --card:#18202c; --ink:#e8ebf0; --muted:#9ba5b5; --line:#2a3443;
+    --navy:#7fb2e6; --navy-soft:#1a2a3d; --rose:#ee8aa6; --rose-soft:#3a2230; --teal:#6cc2c8; --teal-soft:#183136; --gold:#e3ad5c; --gold-soft:#33291a; --red:#ef8a8a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#10151e; --card:#18202c; --ink:#e8ebf0; --muted:#9ba5b5; --line:#2a3443;
+  --navy:#7fb2e6; --navy-soft:#1a2a3d; --rose:#ee8aa6; --rose-soft:#3a2230; --teal:#6cc2c8; --teal-soft:#183136; --gold:#e3ad5c; --gold-soft:#33291a; --red:#ef8a8a;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:400;margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(20px, env(safe-area-inset-right, 0px))}
+.eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--rose)}
+
+/* Cover */
+.cover{position:relative;color:#fff;background:#1b2b40 url("/koningsdam/img/skagway-broadway-1.jpg") center 45%/cover no-repeat}
+.cover::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(8,20,36,.6) 0%, rgba(8,20,36,.42) 40%, rgba(6,14,28,.88) 100%)}
+.cover .wrap{position:relative;padding-block:clamp(60px,12vw,150px) clamp(36px,6vw,70px);display:grid;gap:18px}
+.cover .eyebrow{color:#cde8f5}
+.cover h1{font-size:clamp(2.8rem,8vw,6rem);color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.45);max-width:12ch}
+.cover h1 em{font-style:normal;color:#cde8f5}
+.cover .lede{max-width:58ch;font-size:clamp(1.02rem,1.6vw,1.2rem);color:#eef4f8}
+.credit{position:absolute;right:max(12px, env(safe-area-inset-right, 0px));bottom:8px;font-size:.68rem;color:rgba(255,255,255,.75)}
+
+/* Glance strip */
+.glance{background:var(--card);border-bottom:1px solid var(--line)}
+.glance .wrap{display:grid;grid-template-columns:repeat(5,1fr);gap:0;padding-block:0}
+.g{padding:18px 16px;border-right:1px solid var(--line);display:grid;gap:2px}
+.g:last-child{border-right:0}
+.g b{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.15}
+.g span{font-size:.8rem;color:var(--muted)}
+
+section{padding-block:clamp(44px,6vw,76px)}
+section.alt{background:var(--card);border-block:1px solid var(--line)}
+.sec-head{display:grid;gap:10px;margin-bottom:26px;max-width:70ch}
+.sec-head h2{font-size:clamp(1.9rem,4vw,2.7rem)}
+.sec-head p{color:var(--muted)}
+
+/* Top picks */
+.picks{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pick{border-radius:16px;padding:22px;display:grid;gap:10px;align-content:start;background:var(--card);border:1px solid var(--line);position:relative}
+.pick .rank{font-family:var(--f-mono);font-size:.78rem;color:var(--rose);font-weight:500}
+.pick h3{font-size:1.5rem}
+.pick .price{font-family:var(--f-display);font-size:2.2rem;line-height:1}
+.pick .price small{font-family:var(--f-body);font-size:.8rem;color:var(--muted);margin-left:6px}
+.pick p{font-size:.92rem;color:var(--muted)}
+.pick .why{font-size:.86rem;background:var(--rose-soft);border-radius:10px;padding:10px 12px;color:var(--ink)}
+.pick.splurge .why{background:var(--gold-soft)}
+
+/* Category cards */
+.cat{margin-bottom:38px}
+.cat-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.cat-head h3{font-size:1.65rem}
+.cat-head span{color:var(--muted);font-size:.9rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:10px;align-content:start}
+.ex.pick-mark{border:2px solid var(--gold)}
+.ex .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.ex h4{font-family:var(--f-body);font-weight:700;font-size:1.02rem;line-height:1.3}
+.ex .cost{font-family:var(--f-mono);font-size:1rem;white-space:nowrap;color:var(--navy)}
+.ex p{font-size:.9rem;color:var(--muted)}
+.ex .tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.72rem;font-weight:600;padding:2px 10px;border-radius:99px;background:var(--paper);color:var(--ink);white-space:nowrap}
+.tag.E{background:var(--teal-soft);color:var(--teal)}
+.tag.M{background:var(--gold-soft);color:var(--gold)}
+.tag.fitY{background:var(--teal-soft);color:var(--teal)}
+.tag.fitM{background:var(--gold-soft);color:var(--gold)}
+.tag.ours{background:var(--gold);color:var(--card)}
+.ex .note{font-size:.8rem;color:var(--ink);border-top:1px dashed var(--line);padding-top:8px}
+
+/* Price ladder */
+.ladder{display:grid;gap:6px}
+.rung{display:grid;grid-template-columns:minmax(150px,280px) 1fr;gap:12px;align-items:center;font-size:.84rem}
+.rung .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rung .track{display:flex;align-items:center;gap:8px}
+.rung .bar{height:14px;border-radius:0 4px 4px 0;background:var(--navy);min-width:3px}
+.rung.ours .bar{background:var(--gold)}
+.rung .v{font-family:var(--f-mono);font-size:.8rem;white-space:nowrap}
+.ladder-key{display:flex;gap:18px;font-size:.8rem;color:var(--muted);margin-top:12px}
+.ladder-key i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+/* Sample afternoons */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.plan{background:var(--paper);border-radius:14px;padding:20px;display:grid;gap:12px;align-content:start}
+.plan h3{font-size:1.35rem}
+.plan .sum{font-family:var(--f-mono);font-size:.82rem;color:var(--navy)}
+.plan ol{display:grid;gap:0;border-left:2px solid var(--navy-soft);margin-left:5px}
+.plan li{display:grid;grid-template-columns:70px 1fr;gap:10px;padding:6px 0 6px 14px;position:relative;font-size:.88rem}
+.plan li::before{content:"";position:absolute;left:-6px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--navy)}
+.plan li .t{font-family:var(--f-mono);font-size:.76rem;color:var(--navy);padding-top:2px}
+
+/* Photo band + free */
+.band{position:relative;min-height:320px;background:#2a3a44 url("/koningsdam/img/wpyr-train-2.jpg") center 50%/cover no-repeat;display:flex;align-items:flex-end}
+.band::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(10,20,30,0) 30%, rgba(10,20,30,.75))}
+.band .wrap{position:relative;padding-block:28px;color:#fff;width:100%}
+.band h2{font-size:clamp(1.8rem,4vw,2.6rem);color:#fff}
+.band p{color:#eef4f8;max-width:60ch}
+.band .credit{position:static;display:block;margin-top:8px}
+.free{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.free div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:4px}
+.free b{font-size:.98rem}
+.free span{font-family:var(--f-mono);font-size:.8rem;color:var(--navy)}
+.free p{font-size:.86rem;color:var(--muted)}
+
+.strip{width:100%;display:block;max-width:100%;aspect-ratio:7/1;object-fit:cover}
+.fine{display:grid;gap:8px;font-size:.86rem;color:var(--muted)}
+.fine b{color:var(--ink)}
+footer{padding-block:30px 44px;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted)}
+
+@media (max-width:900px){
+  .glance .wrap{grid-template-columns:repeat(2,1fr)}
+  .g{border-right:0;border-bottom:1px solid var(--line)}
+  .picks,.plans{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .rung{grid-template-columns:1fr;gap:2px}
+}
+.ex h4 a,.pick h3 a,.exname a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb, currentColor 30%, transparent);text-underline-offset:3px}
+.ex h4 a:hover,.pick h3 a:hover,.exname a:hover{color:var(--navy);text-decoration-color:currentColor}
+.ex .book,.pick .book{justify-self:start;font-size:.82rem;font-weight:600;color:var(--navy);text-decoration:none}
+.ex .book:hover,.pick .book:hover{text-decoration:underline}
+.portnav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:22px;border-top:1px solid var(--line);font-weight:600}.portnav a{color:var(--teal);text-decoration:none}
+.tag.S{background:var(--rose-soft);color:var(--rose)}
+.tag.fitN{background:var(--rose-soft);color:var(--red)}
+@media (min-width:901px){.glance .wrap.six{grid-template-columns:repeat(6,1fr)}}
+</style>
+</head>
+<body>
+<nav class="sitenav" aria-label="Site"><div class="sn-top"><b>Diane's 70th</b><a class="sn-tab" href="/">Eurodam</a><a class="sn-tab" href="/koningsdam/" aria-current="true">Koningsdam</a><a class="sn-tab" href="/finalists/">Comparisons</a></div><div class="sn-sub" aria-label="Koningsdam pages"><a href="/koningsdam/">Ship guide</a><a href="/koningsdam/ports/" aria-current="page">Ports &amp; excursions</a><a href="/koningsdam/dining/">Ship dining</a><a href="/koningsdam/planner/">Trip planner</a><a href="/koningsdam/trip/">Boston trip plan</a></div></nav>
+
+
+<header class="cover">
+  <div class="wrap">
+    <p class="eyebrow">Diane's 70th · Koningsdam · Tuesday, August 31, 2027</p>
+    <h1>Skagway: <em>ride the White Pass</em></h1>
+    <p class="lede">The gold-rush town at the top of the Inside Passage, and the one port this route has that the Eurodam's doesn't. We have thirteen hours here, from 7 am to 8 pm, for the White Pass railway, the Yukon and a boardwalk main street. Here's every Holland America excursion in Skagway, with prices, how active each one is, and how well it suits Mom.</p>
+  </div>
+  <span class="credit">Broadway, Skagway · pcwiles, CC BY 3.0</span>
+</header>
+
+<div class="glance">
+  <div class="wrap six">
+    <div class="g"><b>7:00 am</b><span>Koningsdam arrives; the dock is assigned nearer the date</span></div>
+    <div class="g"><b>7:30 pm</b><span>All aboard (sails at 8 pm)</span></div>
+    <div class="g"><b>~8:07 pm</b><span>Sunset, just as we sail down Lynn Canal</span></div>
+    <div class="g"><b>~48–62°F</b><span>Typical late August; 10–15°F colder at the White Pass summit</span></div>
+    <div class="g"><b>Passports</b><span>Carry them on any tour that crosses into Canada (Fraser, the Yukon)</span></div>
+    <div class="g"><b>3 ships</b><span>Royal Princess and Celebrity Edge are in port with us</span></div>
+  </div>
+</div>
+
+<main>
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Our top three for Diane</p>
+      <h2>If we only read one page</h2>
+      <p>All three are seated, easy on the feet and fit the day with hours to spare. Our plan is #1 in the morning and #3 in the afternoon, $248 each. #2 is the alternative if we'd rather make one big day of it.</p>
+    </div>
+    <div class="picks" id="picks"></div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Every option</p>
+      <h2>All Skagway excursions, by type</h2>
+      <p>Holland America's current "from" prices per adult (checked November 2026); 2027 prices may differ. <b>Easy</b> means mostly seated or level walking; <b>Moderate</b> means some uneven ground or climbing in and out; <b>Strenuous</b> means real exertion. The Diane tag is our read for a 70-year-old with average mobility.</p>
+    </div>
+    <div id="cats"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">At a glance</p>
+      <h2>The price ladder</h2>
+      <p>Every excursion from least to most expensive, per person. Gold bars are our picks.</p>
+    </div>
+    <div class="ladder" id="ladder"></div>
+    <div class="ladder-key"><span><i style="background:var(--navy)"></i>Excursion</span><span><i style="background:var(--gold)"></i>Our pick</span></div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Three ways to spend the day</p>
+      <h2>Sample Skagway days</h2>
+      <p>Each one fits the 7 am–8 pm call with hours to spare. Holland America assigns train and tour times at booking, so the times here are typical, not promised. Prices are for all four of us.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>The classic, easy pace</h3>
+        <p class="sum">≈ $992 for four, plus lunch</p>
+        <ol>
+          <li><span class="t">~8:00</span><span><b>White Pass Summit Scenic Railroad</b> from the dock (2¾ hrs). Sit on the left going up.</span></li>
+          <li><span class="t">~11:00</span><span>Back in Skagway</span></li>
+          <li><span class="t">11:30</span><span>Lunch on Broadway: Skagway Brewing or the Red Onion</span></li>
+          <li><span class="t">1:00</span><span>The national park visitor center and its museum (free). Pick up a timed ticket for Jeff. Smiths Parlor.</span></li>
+          <li><span class="t">~2:30</span><span><b>Skagway Street Car City Tour</b> (1½ hrs), ending in town or at the ship</span></li>
+          <li><span class="t">4:30</span><span>Back on board; dinner as we sail down Lynn Canal at 8</span></li>
+        </ol>
+      </div>
+      <div class="plan">
+        <h3>The big day in the Yukon</h3>
+        <p class="sum">≈ $1,136 for four, lunch included</p>
+        <ol>
+          <li><span class="t">~7:45</span><span><b>White Pass Rail &amp; Yukon Expedition</b> (~8¼ hrs): coach to Carcross, barbecue lunch, the train back down from Fraser. Carry passports.</span></li>
+          <li><span class="t">~4:00</span><span>Back in Skagway. An hour on the Broadway boardwalk and a drink at the Red Onion.</span></li>
+          <li><span class="t">6:00</span><span>Back on board, well ahead of the 7:30 all aboard</span></li>
+        </ol>
+      </div>
+      <div class="plan">
+        <h3>On our own</h3>
+        <p class="sum">≈ $160–$180 for four, plus lunch</p>
+        <ol>
+          <li><span class="t">9:00</span><span>City bus to town ($5 day pass). The national park visitor center, the Mascot Saloon and the Moore Homestead, all free.</span></li>
+          <li><span class="t">10:30</span><span>Red Onion brothel-museum tour (~$10), then the boardwalk and shops</span></li>
+          <li><span class="t">12:00</span><span>Lunch</span></li>
+          <li><span class="t">1:30</span><span>On-demand shuttle or taxi to the Gold Rush Cemetery and Reid Falls, or the Skagway Museum</span></li>
+          <li><span class="t">3:00</span><span>The Days of '98 Show (~$25–30). Or swap it for <b>To the Klondike Summit</b> ($54, 1½ hrs) for mountain views without the train fare.</span></li>
+          <li><span class="t">5:00</span><span>Back on board</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band">
+  <div class="wrap">
+    <h2>On our own, for free (or close to it)</h2>
+    <p>Skagway is small and flat. Seven blocks of gold-rush Broadway are a national historical park, and most of its museums cost nothing.</p>
+    <span class="credit">White Pass &amp; Yukon Route train on a trestle · Nils Öberg, CC BY-SA 3.0</span>
+  </div>
+</div>
+<section style="padding-top:28px">
+  <div class="wrap">
+    <div class="free">
+      <div><b>Klondike Gold Rush park visitor center</b><span>Free</span><p>In the old railway depot at 2nd &amp; Broadway. The visitor center, its museum, the Mascot Saloon museum and the Moore House need no tickets. Expect roughly 9:00 am–4:30 pm; check the hours on the day.</p></div>
+      <div><b>Jeff. Smiths Parlor Museum</b><span>Free, timed ticket</span><p>Soapy Smith's saloon, on 2nd Avenue just west of Broadway. Tickets are handed out at the visitor center on the day, so stop there first.</p></div>
+      <div><b>The Broadway boardwalk</b><span>Free</span><p>Seven flat blocks of false-front buildings and wooden sidewalks. The Arctic Brotherhood Hall, with its driftwood front, is at 2nd &amp; Broadway.</p></div>
+      <div><b>Red Onion Saloon</b><span>Free to enter · brothel tour ~$10</span><p>201 Broadway. Restaurant and bar from 10 am, no reservations. The 20-minute brothel-museum tours run 10 am–5:30 pm and are up about 25 steps.</p></div>
+      <div><b>The Days of '98 Show</b><span>~$25–30</span><p>Alaska's longest-running stage show: songs, can-can and Soapy Smith. About an hour, at Eagles Hall, 6th &amp; Broadway.</p></div>
+      <div><b>Skagway Museum</b><span>~$2–5</span><p>In the stone McCabe College building at 7th &amp; Spring.</p></div>
+      <div><b>Gold Rush Cemetery &amp; Lower Reid Falls</b><span>Free · shuttle or taxi</span><p>The graves of Soapy Smith and Frank Reid, with the falls a short path beyond. It's about 1.5–2 miles from the docks, so ride there. The ground in the cemetery is uneven.</p></div>
+      <div><b>Yakutania Point</b><span>Free</span><p>An easy shoreline trail across the footbridge by the airstrip, about a mile from Broadway, with picnic benches and views down the inlet.</p></div>
+      <div><b>Skagway Brewing Co.</b><span>Pay as you go</span><p>4th &amp; State. The Spruce Tip Blonde Ale is the local signature. Klondike Brewing Company has a taproom downtown too.</p></div>
+      <div><b>The city bus</b><span>$5 all day · $3 each way</span><p>Runs between the docks and downtown from 7 am to 9 pm on cruise days. Pay the driver.</p></div>
+    </div>
+  </div>
+</section>
+
+<img class="strip" src="/koningsdam/img/skagway-broadway-2.jpg" alt="Broadway in Skagway, with the Red Onion Saloon on the left and mountains behind">
+
+<section>
+  <div class="wrap">
+    <div class="sec-head" style="margin-bottom:14px">
+      <p class="eyebrow">Good to know</p>
+      <h2>Before we book</h2>
+    </div>
+    <div class="fine">
+      <p><b>Passports.</b> Every tour that goes on to Fraser, Bennett Lake, Carcross or the Yukon crosses into Canada, and so do the Klondike Summit minibus and the photography and bike tours. Carry passports on the day. We'll all have them anyway, because the cruise starts in Vancouver. Holland America lists no passport requirement for the plain Summit Scenic Railroad, where nobody leaves the train.</p>
+      <p><b>The summit is colder.</b> The top of the White Pass is usually 10–15°F colder than town, and often windy or in cloud. Bring a warm layer for the train even on a mild day.</p>
+      <p><b>Book the train early.</b> The White Pass trains are what people come to Skagway for, and with three ships in port the good departure times go first. Book in My Account on Holland America's site as soon as excursions open. Booking direct with the railway looks a little cheaper (roughly $150–165 for the summit trip; check when booking), but Holland America's $189 boards at the dock and the ship waits for its own tours.</p>
+      <p><b>Which dock.</b> Skagway has four big-ship berths: Railroad Dock forward and aft, the Broadway Dock and the Ore Dock. Ours isn't assigned yet. The Broadway Dock is about a five-minute level walk from town; the Ore and Railroad docks are more like 15–20 minutes, about three-quarters of a mile.</p>
+      <p><b>The Railroad Dock rockslides.</b> The mountainside above the Railroad Dock has been shedding rock since 2022, and on the latest reports we found (2025) the dock was still closed to people on foot. Ships at the forward berth have sent passengers ashore by small boat or bus instead; the aft berth, the Broadway Dock and the Ore Dock aren't affected. We haven't been able to confirm how this stands for 2027. If we are given that berth, expect a short tender or shuttle instead of a walk. Tours still meet on the pier. Check the Navigator app nearer the date.</p>
+      <p><b>Getting around.</b> The city bus is $5 for the day or $3 each way. For places farther out there's an on-demand shuttle, (907) 612-0902, at $5–15 depending on distance.</p>
+      <p><b>Mushers' Camp runs Tuesday to Thursday.</b> Mushers' Camp &amp; S'mores Roasting only operates on those days. August 31, 2027 is a Tuesday, so it runs for us.</p>
+      <p><b>No ranger-led town walks.</b> Older guidebooks promise free hourly walks with a park ranger. The National Park Service says it no longer offers them. The Street Car tour or our own stroll with the park's free museums does the job.</p>
+      <p><b>Weather and weight.</b> Helicopter tours are often cancelled for low cloud, and guests are weighed, with a surcharge at 250 lb and over. Holland America refunds in full if it cancels a tour.</p>
+      <p><b>Prices.</b> These are Holland America's "from" prices per adult as shown in November 2026. Its site doesn't say which season they are for, so 2027 prices may differ. Prices marked "~" for things we'd pay for ourselves in town are estimates. If you find the identical tour cheaper elsewhere, Holland America's Best Price Guarantee gives 110% of the difference as onboard credit.</p>
+    </div>
+  </div>
+</section>
+<nav class="portnav wrap"><a href="/koningsdam/juneau/">← Juneau</a><a href="/koningsdam/ports/">All ports</a><a href="/koningsdam/glacier-bay/">Glacier Bay →</a></nav>
+</main>
+
+<footer>
+  <div class="wrap">Excursion details and prices from Holland America's Skagway shore excursion pages, read November 15, 2026. Port times and the other ships in port from the Cruise Line Agencies of Alaska 2027 calendar. Town details from the National Park Service and Skagway's visitor site. Photos via Wikimedia Commons: Broadway, Skagway by pcwiles (CC BY 3.0); White Pass train by Nils Öberg (CC BY-SA 3.0); Broadway and the Red Onion Saloon by Bob Keefer (CC BY 2.0).</div>
+</footer>
+
+<script>
+const EXBASE={"jnu": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/jnu", "sgy": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/sgy", "ktn": "https://www.hollandamerica.com/en/us/cruise-destinations/alaska-cruises/alaska-yukon-ports/ktn"};const EXRULES={"jnu": [["23011", ["endicott"]], ["23035", ["evening whale"]], ["23023", ["mendenhall", "whale quest"]], ["23022", ["whale watching", "wildlife quest"]], ["23069", ["mendenhall glacier explorer"]], ["23004", ["mendenhall", "salmon bake"]], ["23070", ["mendenhall", "tram"]], ["23005", ["mendenhall", "glacier gardens"]], ["23001", ["glacier gardens", "whale park"]], ["23033", ["tram on your own"]], ["23014", ["alaska salmon bake"]], ["23054", ["best of juneau"]], ["23073", ["glacier trail"]], ["23038", ["photo safari"]], ["23007", ["taku lodge"]], ["23034", ["airboat"]], ["23008", ["helicopter", "guided walk"]], ["23012", ["float trip"]], ["230361", ["luxury whale"]], ["230922", ["jeep"]], ["23026", ["dog sled"]]], "sgy": [["36911", ["luxury"]], ["36949", ["bennett"]], ["36928", ["yukon expedition"]], ["369951", ["suspension bridge"]], ["36974", ["barbecue"]], ["36925", ["best of skagway"]], ["36903", ["liarsville"]], ["36966", ["multilingual"]], ["36902", ["by bike"]], ["36901", ["summit scenic railroad"]], ["369241", ["klondike summit"]], ["36963", ["days of"]], ["36908", ["street car"]], ["36904", ["gold fever"]], ["369121", ["ultimate musher"]], ["36912", ["s'mores"]], ["36926", ["sled dog experience"]], ["36913", ["dogsledding"]], ["36909", ["glacier discovery"]], ["36905", ["legends"]], ["36942", ["sunrise saloon"]], ["36907", ["ghosts"]], ["369061", ["kitchen science"]], ["36975", ["in focus"]], ["369161", ["waterfalls"]], ["36999", ["ocean raft"]], ["36916", ["glacier point"]], ["36933", ["eagle preserve"]], ["36937", ["jet boat"]], ["36946", ["takshanuk"]], ["36914", ["canoe safari"]], ["36915", ["chilkoot"]], ["36978", ["rainforest by bicycle"]], ["36929", ["adventure park"]], ["36936", ["grizzly falls"]], ["36938", ["rock climb"]]], "ktn": [["242221", ["bear encounter"]], ["24223", ["bear adventure"]], ["24259", ["black bear"]], ["242231", ["wilderness flightseeing"]], ["24278", ["silverking"]], ["24239", ["bering sea"]], ["242451", ["ultimate saxman"]], ["24236", ["misty fjords"]], ["24241", ["george inlet"]], ["24225", ["saxman", "lumberjack"]], ["24203", ["saxman"]], ["24201", ["totem bight"]], ["24208", ["lumberjack", "crab"]], ["24227", ["lumberjack show"]], ["24217", ["trolley"]], ["24231", ["duck"]], ["242791", ["pub crawl"]], ["242961", ["waterfront & wildlife"]], ["24238", ["lighthouse"]], ["24243", ["wilderness exploration"]], ["24207", ["salmon fishing"]], ["242151", ["zodiac"]], ["24260", ["hummer"]]]};function exUrl(code,name){const t=document.createElement('textarea');t.innerHTML=name;const n=t.value.toLowerCase();for(const [id,kws] of (EXRULES[code]||[])){if(kws.every(k=>n.includes(k)))return EXBASE[code]+(id?'/'+id:'');}return null;}
+const lk=(n,txt)=>{const u=exUrl('sgy',n);return u?`<a href="${u}" target="_blank" rel="noopener">${txt||n}</a>`:(txt||n);};
+const bk=(n,txt)=>{const u=exUrl('sgy',n);return u?`<a class="book" href="${u}" target="_blank" rel="noopener">${/\/\d+$/.test(u)?(txt||'Details &amp; booking on Holland America ↗'):'See Skagway tours on Holland America ↗'}</a>`:'';};
+// [id, name, price(num), priceLabel, duration, level E/M/S, fit Y/M/N, desc, note, cat, pick]
+const EX = [
+  ["wps","White Pass Summit Scenic Railroad",189,"$189","2¾ hrs","E","Y","Round trip on the narrow-gauge White Pass & Yukon Route in a vintage-style rail car to the 2,865-ft summit: two tunnels, trestles, Bridal Veil Falls, Inspiration Point and Dead Horse Gulch. The train loops at the summit and comes back down.","Restrooms on every car. No food is sold on the train and nobody gets off. No border stop. A wheelchair-accessible version with lift-equipped transport is the same price, for guests using a wheelchair plus one companion. Our #1 pick.","rail",1],
+  ["lux","White Pass & Yukon Route Railroad: A Luxury Travel Experience",459,"$459","~2¾ hrs","E","Y","The same summit run in the railway's premier parlor car: leather seating, drinks and regional appetizers included, and a private guide.","The splurge version of the same views. Minimum age 21. Not advisable for wheelchair users.","rail"],
+  ["liars","White Pass Rail, Klondike Highway & Liarsville Gold Camp",229,"$229","~5 hrs","E","Y","The train past the summit to Fraser, British Columbia, a coach back down the highway past Tormented Valley and Pitchfork Falls, then the Liarsville gold-rush camp for a comic show, a Robert Service poem and gold panning with gold guaranteed.","Passport needed. Snacks are for sale, but no meal is included.","rail"],
+  ["bbq","White Pass Rail, Summit, Gold Panning & Barbecue Lunch, Curated with The HISTORY Channel",269,"$269","~5¾ hrs","E","Y","The train to the summit and on to Fraser, a coach down White Pass Canyon, then a barbecue lunch at Dredge Town and gold panning in warm-water troughs.","Passport needed. Lunch included (vegetarian with 24 hours' notice). An honourable mention: lunch and a souvenir of real gold.","rail"],
+  ["best","Best of Skagway: Rail, Salmon Bake & Saloon",319,"$319","~7 hrs","M","M","The train to Fraser and a coach back, the Liarsville salmon bake (grilled wild salmon, chicken and sides) with the show and gold panning, then a champagne toast and the brothel museum at the Red Onion Saloon.","Passport needed. The brothel museum is up about 25 steps. A long day with a lot packed in.","rail"],
+  ["multi","White Pass Rail & Klondike Highway: Multilingual",204,"$204","3¾ hrs","E","M","A minibus up the Klondike Highway one way and the train the other, narrated in several languages at once.","Passport needed. Three steps to board the minibus. Meant for guests who don't speak English, so the Liarsville version suits us better.","rail"],
+
+  ["yukon","White Pass Rail & Yukon Expedition",284,"$284","~8¼ hrs","E","Y","A coach 65 miles up the Klondike Highway into the Yukon: Carcross, a photo stop at the Carcross Desert, and a chicken barbecue lunch with homemade donuts at Wild Adventure Yukon (wildlife museum, Mountie exhibit, sled dogs, petting farm). Then the train down from Fraser to Skagway.","Passport needed. Lunch included. The order may run in reverse. A long day, but an easy one. Our pick if we want one big outing.","yukon"],
+  ["bennett","White Pass Rail Bennett Lake & Yukon Adventure",359,"$359","~8 hrs","E","Y","The long rail trip: 67 miles by train past the summit to Bennett Lake, which can only be reached by rail, for a self-guided walk around the abandoned gold-rush town. Boxed lunch on board, on to Carcross, then a coach back.","Passport needed. Boxed lunch (vegetarian with 24 hours' notice). The uphill walk to the church at Bennett is optional. A long day.","yukon"],
+  ["bridge","Experience the Yukon & Suspension Bridge",194,"$194","~8¼ hrs","E","Y","All by coach: the Klondike Highway to the 3,290-ft summit, the Yukon Suspension Bridge over the Tutshi River, a barbecue lunch and donuts at Caribou Crossing Trading Post, the wildlife museum, sled dogs and time in Carcross.","Passport needed. Lunch included. Crossing the bridge is optional. No train, and the cheapest way into the Yukon. A long day.","yukon"],
+  ["summit","To the Klondike Summit",54,"$54","~1½ hrs","E","Y","A minibus up the Klondike Highway beside the railway to the 3,290-ft summit, with views of Pitchfork Falls, the Moore Bridge and the Dead Horse Trail.","Passport needed (it passes the US customs post). Three steps to board; no wheelchairs or scooters. Dress warmly.","yukon"],
+
+  ["street","Skagway Street Car City Tour",59,"$59","~1½ hrs","E","Y","A yellow 1927 sightseeing bus with a costumed driver: the waterfront, the historic district, a scenic overlook, Soapy Smith's gunfight retold at the Gold Rush Cemetery, and the residential streets.","Holland America calls it ideal for guests with mobility limitations; three steps to board. We may stay in town and walk back. Pairs well with the morning train.","town",1],
+  ["easy","Easy Skagway, Klondike Highway & The Days of '98 Show",84,"$84","~3¼ hrs","E","Y","A coach drive through town to the Gold Rush Cemetery and up the Klondike Highway, then the Days of '98 Show, Alaska's longest-running stage show: songs, can-can and Soapy Smith.","The order may vary, and we may stay in town afterwards. A wheelchair-accessible version with lift-equipped transport is the same price, for guests using a wheelchair plus one companion.","town"],
+  ["legends","Legends & Lies: A Gold Rush Saloon Experience with Boomtown Food",139,"$139","~2½ hrs","E","Y","A 30-minute town tour including the Gold Rush Cemetery, then the Historic Skagway Inn, once a brothel, for costumed characters, songs, mixing a stampeder cocktail and boomtown food.","Food included. Minimum age 16; 21 to drink, with photo ID.","town"],
+  ["kitchen","Kitchen Science Alaska: Garden-to-Table Skagway",119,"$119","~2½ hrs","E","Y","A short drive through the historic district, then the Historic Skagway Inn and Olivia's Restaurant: the kitchen garden, a chef's demonstration and tastings of garden and seafood dishes.","Food included. Holland America says the tour is wheelchair accessible.","town"],
+  ["sunrise","Sunrise Saloon: Exclusive Red Onion Brothel Museum & City Tour",99,"$99","2½ hrs","M","M","A narrated drive through town, then the Red Onion Saloon before it opens: a costumed madam, a mimosa or coffee, a souvenir garter and the upstairs brothel museum.","A morning tour. About 25 steps up and down to the museum. Food included. 21+ for alcohol; recommended minimum age 14.","town"],
+  ["ghosts","Ghosts & Goodtime Girls Walking Tour",69,"$69","~2 hrs","M","M","A Red Onion \"madam\" meets us at the ship and walks us through the back alleys and the old red-light district with stories of Klondike Kate and Soapy Smith, ending at the brothel museum.","Two hours on foot. Minimum age 14.","town"],
+  ["focus","Skagway in Focus: Guided Photography Adventure",124,"$124","~3 hrs","M","M","A local professional photographer takes a small group to his chosen spots: the lakes at the White Pass summit, or the coast toward Dyea. Any camera or phone will do.","Passport needed. Rough, uneven ground and inclines; Holland America says it is not advisable with mobility limitations.","town"],
+
+  ["fever","Gold Fever Experience: Gold Panning & Alaska Sled Dogs",139,"$139","~3 hrs","E","Y","A costumed guide takes us to Dredge Town to meet Iditarod sled dogs and puppies, watch a demonstration run, then learn to sluice and pan for gold (gold guaranteed) beside the Sixty Mile Dredge.","We watch the dogs run; we don't ride. No bumpy drive, which makes it the easy sled-dog choice. A wheelchair-accessible version with lift-equipped transport is the same price, for guests using a wheelchair plus one companion.","dogs"],
+  ["smores","Mushers' Camp & S'mores Roasting",164,"$164","~2¾ hrs","E","M","A drive along nine miles of coastline to the camp at Dyea for a musher's talk, time with the dogs and puppies, and s'mores by the fire.","Runs Tuesday to Thursday only; August 31 is a Tuesday. Uneven ground and several 12-inch steps without help. A bumpy ride; not allowed with a back or neck condition.","dogs"],
+  ["sledride","Musher's Camp & Sled Dog Experience",234,"$234","~3¼ hrs","M","M","A drive to Dyea, a Unimog ride up a rough mountain road, then a summer sled ride on a wheeled cart pulled by a husky team. Puppies afterwards.","There's no snow; the sled has wheels. 12-inch steps. Bumpy; not allowed with back or neck conditions.","dogs"],
+  ["ultimate","Ultimate Musher's Camp Experience: Dog Sled Ride, Gold Panning & S'mores",304,"$304","~4 hrs","M","M","The Unimog ride and a one-mile run on the wheeled sled, plus time with the dogs and puppies, gold panning, s'mores and an optional short walk to a waterfall.","The same steps and the same back and neck restrictions as the other camp tours.","dogs"],
+
+  ["heli","Glacier Discovery by Helicopter",484,"$484","~2 hrs","M","M","A helicopter from the Skagway waterfront lands on a glacier (the Chilkat, Ferebee or Meade, chosen on the day) for a guided walk on the ice.","We'd need to walk up to 200 ft on uneven ice; glacier boots are provided. Surcharge at 250 lb and over. Free cancellation until noon on Day 2 of the cruise. Flights are often cancelled for weather.","air"],
+  ["helidogs","Glacier Dogsledding Demonstration by Helicopter",649,"$649","~2 hrs","M","M","About 30 minutes of helicopter flightseeing and about an hour on the Denver Glacier with a musher and a dog team.","It's a demonstration: guests do not ride the sled. Waiver required. Depends on the weather.","air"],
+
+  ["falls","Waterfalls & Wildlife Scenic Cruise",234,"$234","~3 hrs","M","M","A boat trip along the fjord to a string of named waterfalls, eagle nests and gold-rush sites.","Food included. Boarding means stepping up 12 inches or more. No walkers or wheelchairs.","water"],
+  ["gpoint","Glacier Point Wilderness Safari",354,"$354","~6 hrs","M","M","A 75-minute fast-boat ride down Lynn Canal to Glacier Point, a drive through the forest and a quarter-mile walk, then a 31-ft canoe on the lake in front of Davidson Glacier.","A meal is included. Involves a hike over uneven ground. Maximum 350 lb.","water"],
+  ["eagles","Haines Eagle Preserve Float & Wildlife Quest",289,"$289","~6½ hrs","M","M","A fast catamaran to Haines, a 40-minute scenic drive, then a gentle raft float with no white water through the Chilkat Bald Eagle Preserve. Lunch included.","A walk over loose gravel to board the rafts. Boots and ponchos supplied. Maximum 350 lb.","water"],
+  ["jet","Haines Wilderness Odyssey by Jet Boat",264,"$264","6½ hrs","M","M","A 45-minute fast ferry to Haines, a bus up the Haines Scenic Byway, then at least 20 miles by jet boat on the Chilkat River looking for eagles, moose and bears. A meal is included.","Holland America says it is not advisable with mobility limitations; the ferry dock ramp can be very steep at low tide.","water"],
+  ["mule","Takshanuk Mountain Trail by 4x4 & Lodge Meal",314,"$314","~6¼ hrs","M","M","A ferry to Haines, then drive or ride in a Kawasaki Mule 4x4 up a six-mile round-trip forest trail to a 1,500-ft viewpoint, with a meal at a lodge.","Drivers must be 21 with a licence. Bumpy; check with a doctor first for heart, back or neck conditions. The ferry ramp is steep at low tide.","water"],
+  ["raft","Ocean Raft Adventure",214,"$214","~2 hrs","M","N","A fast, open raft on Lynn Canal, in an exposure suit, to waterfalls and coves with seals and sea lions.","Not allowed with back or neck conditions. Maximum 350 lb.","water"],
+  ["canoe","Alaska Wildlife Canoe Safari",254,"$254","6¼ hrs","S","N","A catamaran to Haines and a drive to the Chilkoot River valley (brown bears, eagles, salmon), then a motor-assisted Voyager canoe on Chilkoot Lake.","Holland America rates it strenuous. A basic bus and a picnic lunch. Maximum 300 lb.","water"],
+
+  ["dyeabike","Rainforest by Bicycle",129,"$129","~2¾ hrs","M","M","A van to Dyea, then five flat miles by bike through rainforest, gold-rush ruins and the tidal flats.","Riders need to be confident on a bike with handbrakes, on dirt roads. Maximum 270 lb.","active"],
+  ["chilkoot","Chilkoot Trail Hike & Float",189,"$189","~4¼ hrs","S","N","Hike the first stretch of the Chilkoot Trail, then float back down the Taiya River by raft, with no white water. A snack by the river.","350 ft of climb in the first half mile, on uneven trail.","active"],
+  ["bike","White Pass Rail & Klondike Highway by Bike",249,"$249","~4½ hrs","S","N","The train up, then a 15-mile downhill bike ride from the summit to the sea on the Klondike Highway.","15–25 mph on a public highway. Passport needed. Maximum 270 lb.","active"],
+  ["zip","Adventure Park Zip-Lining & Ropes Course",154,"$154","3½ hrs","S","N","A ropes course and six zip lines in the forest off the Klondike Highway.","An uphill walk with many steps. Maximum 300 lb and a 52-inch waist.","active"],
+  ["grizzly","Grizzly Falls Zip-Line Expedition",249,"$249","~4 hrs","S","N","A Unimog up a mountain road at Dyea, then a zip-line course over waterfalls.","Maximum 265 lb. Not allowed with back, neck or seizure conditions.","active"],
+  ["climb","Klondike Rock Climb & Rappel",129,"$129","~3¼ hrs","S","N","Guided climbing and rappelling on granite beside the Klondike Highway.","An observer rate can be booked on board.","active"]
+];
+const CATS = [
+  ["rail","The White Pass railway","The reason people come to Skagway"],
+  ["yukon","The Yukon and the Klondike Highway","Across the border by coach, train or both"],
+  ["town","Gold rush & town","Soapy Smith, saloons and the historic district"],
+  ["dogs","Sled dogs & gold panning","Puppies, mushers and a pan of real gold"],
+  ["air","Helicopters & glaciers","Big-ticket and weather dependent"],
+  ["water","Haines & the water","Lynn Canal by boat, and the wildlife around Haines"],
+  ["active","Active","Bikes, hikes, zip lines and rock"]
+];
+const fmt = n => "$" + n.toLocaleString("en-US");
+const LV = {E:"Easy",M:"Moderate",S:"Strenuous"}, FT = {Y:"Great for Diane",M:"Maybe for Diane",N:"Not advised for Diane"};
+const card = x => `<div class="ex ${x[10]?"pick-mark":""}">
+  <div class="top"><h4>${lk(x[1])}</h4><span class="cost">${x[3]}</span></div>
+  <p>${x[7]}</p>
+  <div class="tags"><span class="tag">${x[4]}</span><span class="tag ${x[5]}">${LV[x[5]]}</span><span class="tag fit${x[6]}">${FT[x[6]]}</span>${x[10]?`<span class="tag ours">Our pick</span>`:""}</div>
+  ${x[8]?`<p class="note">${x[8]}</p>`:""}${bk(x[1])}
+</div>`;
+document.getElementById("cats").innerHTML = CATS.map(c=>{
+  const list = EX.filter(x=>x[9]===c[0]);
+  return `<div class="cat"><div class="cat-head"><h3>${c[1]}</h3><span>${c[2]} · ${list.length} option${list.length>1?"s":""}</span></div><div class="cards">${list.map(card).join("")}</div></div>`;
+}).join("");
+
+const PICKS = [
+  ["wps","#1 · The reason to come","The narrow-gauge White Pass & Yukon Route climbs from the dock to the 2,865-ft summit past Bridal Veil Falls, Inspiration Point and Dead Horse Gulch, then loops and comes back down. Sit on the left going up.","Why for Diane: seated the whole way, restrooms on every car, no getting off and no border stop. Short enough to leave most of the day free."],
+  ["yukon","#2 · The one big outing","The full day: a coach up the Klondike Highway to Carcross and the Carcross Desert, a barbecue lunch with homemade donuts, then the train down from Fraser. The 7 am–8 pm call makes it comfortable.","Why for Diane: easy and mostly seated, with lunch included, but it is 8¼ hours. The all-coach Experience the Yukon & Suspension Bridge ($194) is the cheaper way into the Yukon, without the train."],
+  ["street","#3 · The easy afternoon","A yellow 1927 sightseeing bus with a costumed driver covers the waterfront, the historic district, a scenic overlook and Soapy Smith's story at the Gold Rush Cemetery.","Why for Diane: Holland America calls it ideal for guests with mobility limitations. It reaches the cemetery and overlook that are too far to walk, and it pairs with the morning train."]
+];
+document.getElementById("picks").innerHTML = PICKS.map(p=>{
+  const x = EX.find(e=>e[0]===p[0]);
+  return `<div class="pick"><span class="rank">${p[1]}</span><h3>${lk(x[1])}</h3><div class="price">${x[3]}<small>per person · ${x[4]}</small></div><p>${p[2]}</p><p class="why">${p[3]}</p>${bk(x[1],"Details &amp; booking ↗")}</div>`;
+}).join("");
+
+const priced = EX.map(x=>({n:x[1], v:x[2]!==null?x[2]:parseInt(x[3].replace(/[^0-9–]/g,"").split("–")[0]), lab:x[3], ours:!!x[10]})).sort((a,b)=>a.v-b.v);
+const max = Math.max(...priced.map(p=>p.v));
+document.getElementById("ladder").innerHTML = priced.map(p=>`<div class="rung ${p.ours?"ours":""}" title="${p.n}: ${p.lab}"><span class="n">${p.n}</span><span class="track"><span class="bar" style="width:calc((100% - 90px) * ${(p.v/max).toFixed(4)})"></span><span class="v">${p.lab}</span></span></div>`).join("");
+</script>
+
+<script>
+/* Site-wide auto-linker: turns mentions of hotels, restaurants, attractions, ships, airlines
+   and ports into links. Runs on load and again whenever a page re-renders (e.g. filters). */
+(() => {
+  const LINKS = [
+    ["Juneau", "/koningsdam/juneau/"],
+    ["Skagway", "/koningsdam/skagway/"],
+    ["Glacier Bay", "/koningsdam/glacier-bay/"],
+    ["Ketchikan", "/koningsdam/ketchikan/"],
+    ["Eurodam", "/"],
+    ["Koningsdam", "https://www.hollandamerica.com/en/us/cruise-ships/koningsdam"],
+    ["Pan Pacific Vancouver", "https://www.panpacific.com/en/hotels-and-resorts/pp-vancouver.html"],
+    ["Pan Pacific", "https://www.panpacific.com/en/hotels-and-resorts/pp-vancouver.html"],
+    ["Fairmont Waterfront", "https://www.fairmont.com/en/hotels/vancouver/fairmont-waterfront.html"],
+    ["Fairmont Pacific Rim", "https://www.fairmont.com/en/hotels/vancouver/fairmont-pacific-rim.html"],
+    ["Fairmont Hotel Vancouver", "https://www.fairmont.com/en/hotels/vancouver/fairmont-hotel-vancouver.html"],
+    ["Rosewood Hotel Georgia", "https://www.rosewoodhotels.com/en/hotel-georgia-vancouver"],
+    ["Wedgewood Hotel", "https://www.wedgewoodhotel.com/"],
+    ["EXchange Hotel", "https://www.exchangehotelvan.com/"],
+    ["Pinnacle Hotel Harbourfront", "https://www.pinnacleharbourfronthotel.com/"],
+    ["Days Inn by Wyndham Vancouver Downtown", "https://www.daysinnvancouver.com/"],
+    ["Coast Coal Harbour", "https://www.coasthotels.com/coast-coal-harbour-vancouver-hotel-by-apa"],
+    ["Fairmont Vancouver Airport", "https://www.fairmont.com/en/hotels/vancouver/fairmont-vancouver-airport.html"],
+    ["Five Sails", "https://www.fivesails.ca/"],
+    ["Miku", "https://mikurestaurant.com/"],
+    ["Botanist", "https://www.botanistrestaurant.com/"],
+    ["Blue Water Cafe", "https://www.bluewatercafe.net/"],
+    ["Teahouse in Stanley Park", "https://www.vancouverdine.com/teahouse"],
+    ["Cardero's", "https://www.vancouverdine.com/carderos"],
+    ["Cactus Club Cafe", "https://www.cactusclubcafe.com/location/coal-harbour/"],
+    ["Canada Place", "https://www.canadaplace.ca/"],
+    ["FlyOver", "https://www.flyovercanada.com/"],
+    ["Vancouver Lookout", "https://vancouverlookout.com/"],
+    ["Stanley Park", "https://vancouver.ca/parks-recreation-culture/stanley-park.aspx"],
+    ["Vancouver Aquarium", "https://www.vanaqua.org/"],
+    ["Granville Island", "https://granvilleisland.com/"],
+    ["Aquabus", "https://theaquabus.com/"],
+    ["Gastown", "https://gastown.org/"],
+    ["Capilano Suspension Bridge Park", "https://www.capbridge.com/"],
+    ["Dr. Sun Yat-Sen Classical Chinese Garden", "https://vancouverchinesegarden.com/"],
+    ["Canada Line", "https://www.translink.ca/schedules-and-maps/skytrain"],
+    ["Air Canada", "https://www.aircanada.com/"],
+    ["Sel de Mer", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/sel-de-mer"],
+    ["Canaletto", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/canaletto"],
+    ["Morimoto by Sea", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/morimoto-by-sea"],
+    ["Grand Dutch Café", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/grand-dutch-cafe"],
+    ["Grand Dutch Cafe", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/grand-dutch-cafe"],
+    ["Club Orange", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/club-orange"],
+    ["Lido Market", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/lido-market"],
+    ["Crow's Nest", "https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/crows-nest"],
+    ["Ocean Bar", "https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/ocean-bar"],
+    ["World Stage", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/world-stage"],
+    ["B.B. King's Blues Club", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/bb-kings-blues-club"],
+    ["Greenhouse Spa", "https://www.hollandamerica.com/en/us/onboard-experiences/activities/greenhouse-spa-salon"],
+    ["Red Onion Saloon", "https://www.redonion1898.com/"],
+    ["Days of '98 Show", "https://thedaysof98show.com"],
+    ["Skagway Museum", "https://www.skagway.org/museum"],
+    ["Icy Strait Point", "/icy-strait/"],
+    ["Sitka", "/sitka/"],
+    ["OpenTable", "https://www.opentable.com/"],
+    ["Tock", "https://www.exploretock.com/"],
+    ["Google Flights", "https://www.google.com/travel/flights"],
+    ["Alaska Airlines", "https://www.alaskaair.com/"],
+    ["Delta", "https://www.delta.com/"],
+    ["JetBlue", "https://www.jetblue.com/"],
+    ["Holland America Line", "https://www.hollandamerica.com/"],
+    ["Holland America", "https://www.hollandamerica.com/"],
+    ["Zaandam", "https://www.hollandamerica.com/en/us/cruise-ships/zaandam"],
+    ["Princess Cruises", "https://www.princess.com/"],
+    ["Royal Princess", "https://www.princess.com/ships-and-experience/ships/rp-royal-princess/"],
+    ["Crown Princess", "https://www.princess.com/ships-and-experience/ships/kp-crown-princess/"],
+    ["Coral Princess", "https://www.princess.com/ships-and-experience/ships/co-coral-princess/"],
+    ["Star Princess", "https://www.princess.com/ships-and-experience/ships/st-star-princess/"],
+    ["Norwegian Cruise Line", "https://www.ncl.com/"],
+    ["Norwegian Encore", "https://www.ncl.com/cruise-ships/norwegian-encore"],
+    ["Norwegian Bliss", "https://www.ncl.com/cruise-ships/norwegian-bliss"],
+    ["Celebrity Cruises", "https://www.celebritycruises.com/"],
+    ["Celebrity Edge", "https://www.celebritycruises.com/cruise-ships/celebrity-edge"],
+    ["Royal Caribbean", "https://www.royalcaribbean.com/"],
+    ["Voyager of the Seas", "https://www.royalcaribbean.com/cruise-ships/voyager-of-the-seas"],
+    ["Disney Cruise Line", "https://disneycruise.disney.go.com/"],
+    ["Disney Wonder", "https://disneycruise.disney.go.com/ships/wonder/"],
+    ["Viking Orion", "https://www.vikingcruises.com/oceans/ships/viking-orion.html"],
+    ["Viking", "https://www.vikingcruises.com/"],
+    ["Pinnacle Grill", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/pinnacle-grill"],
+    ["Tamarind", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/tamarind"],
+    ["Rolling Stone Lounge", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/rolling-stone-lounge"],
+    ["Billboard Onboard", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/billboard-onboard"],
+    ["Have It All", "https://www.hollandamerica.com/en/us/cruise-deals/have-it-all"],
+    ["Glacier Bay National Park", "https://www.nps.gov/glba/"],
+    ["Mendenhall Glacier", "https://www.fs.usda.gov/r10/tongass/offices/mendenhall-glacier-visitor-center"],
+    ["Mendenhall", "https://www.fs.usda.gov/r10/tongass/offices/mendenhall-glacier-visitor-center"],
+    ["Glacier Gardens", "https://www.glaciergardens.com/"],
+    ["Goldbelt Tram", "https://goldbelttram.com/"],
+    ["Mount Roberts Tramway", "https://goldbelttram.com/"],
+    ["Mount Roberts", "https://goldbelttram.com/"],
+    ["Alaska State Museum", "https://museums.alaska.gov/"],
+    ["Taku Lodge", "https://www.takulodge.com/"],
+    ["Tracy's King Crab Shack", "https://www.kingcrabshack.com/"],
+    ["Red Dog Saloon", "https://www.reddogsaloon.com/"],
+    ["Fortress of the Bear", "https://www.fortressofthebear.org/"],
+    ["Alaska Raptor Center", "https://alaskaraptor.org/"],
+    ["Raptor Center", "https://alaskaraptor.org/"],
+    ["Sitka National Historical Park", "https://www.nps.gov/sitk/"],
+    ["Sheldon Jackson Museum", "https://museums.alaska.gov/sheldon_jackson/"],
+    ["Sitka Sound Science Center", "https://sitkascience.org/"],
+    ["New Archangel Dancers", "https://www.newarchangeldancers.com/"],
+    ["Visit Sitka", "https://www.visitsitka.org/"],
+    ["Totem Heritage Center", "http://ketchikanmuseums.org/"],
+    ["Great Alaskan Lumberjack Show", "https://www.alaskanlumberjackshow.com/"],
+    ["Misty Fjords", "https://www.fs.usda.gov/recarea/tongass/recarea/?recid=79428"],
+    ["White Pass & Yukon Route", "https://wpyr.com/"],
+    ["White Pass", "https://wpyr.com/"],
+    ["Klondike Gold Rush National Historical Park", "https://www.nps.gov/klgo/"],
+    ["Butchart Gardens", "https://www.butchartgardens.com/"],
+    ["Butchart", "https://www.butchartgardens.com/"],
+    ["Fairmont Empress", "https://www.fairmont.com/empress-victoria/"],
+    ["Craigdarroch Castle", "https://thecastle.ca/"],
+    ["Alaska Wildlife Conservation Center", "https://www.alaskawildlife.org/"],
+    ["Denali", "https://www.nps.gov/dena/"],
+    ["Capilano Suspension Bridge", "https://www.capbridge.com/"]
+  ];
+  const here = location.pathname.replace(/index\.html$/, "");
+  const items = LINKS.filter(([, u]) => u !== here).sort((a, b) => b[0].length - a[0].length);
+  const url = new Map(items);
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(items.map(([p]) => esc(p)).join("|"), "g");
+  const isWord = c => !!c && /[A-Za-z0-9À-ÿ]/.test(c);
+  const SKIP = "a,button,script,style,title,h1,h2,nav,figcaption,textarea,select,option,label,footer,.credit,.credit2,.photo-credit,.filters,.jump,.sitenav,.portnav,[data-nolink]";
+  const BLOCK = "p,li,td,th,dd,dt,h3,h4,figure,blockquote";
+  const done = new WeakMap();
+
+  function linkify(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => (!n.nodeValue.trim() || !n.parentElement || n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      const text = node.nodeValue;
+      re.lastIndex = 0;
+      if (!re.test(text)) continue;
+      const block = node.parentElement.closest(BLOCK) || node.parentElement.closest("div,section,article") || document.body;
+      let used = done.get(block); if (!used) done.set(block, used = new Set());
+      const frag = document.createDocumentFragment();
+      let last = 0, changed = false, m;
+      re.lastIndex = 0;
+      while ((m = re.exec(text))) {
+        const p = m[0], s = m.index, e = s + p.length;
+        if (isWord(text[s - 1]) || isWord(text[e]) || used.has(p)) continue;
+        const href = url.get(p);
+        used.add(p); changed = true;
+        frag.append(text.slice(last, s));
+        const a = document.createElement("a");
+        a.href = href; a.textContent = p; a.className = "autolink";
+        if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener"; }
+        frag.append(a);
+        last = e;
+      }
+      if (!changed) continue;
+      frag.append(text.slice(last));
+      node.replaceWith(frag);
+    }
+  }
+  const style = document.createElement("style");
+  style.textContent = "a.autolink{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent)}a.autolink:hover,a.autolink:focus-visible{text-decoration-color:currentColor;text-decoration-thickness:2px}";
+  document.head.append(style);
+  const run = () => linkify(document.body);
+  let t; const obs = new MutationObserver(() => { clearTimeout(t); t = setTimeout(run, 60); });
+  const start = () => { run(); obs.observe(document.body, { childList: true, subtree: true }); };
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start) : start();
+})();
+
+</script>
+</body>
+</html>

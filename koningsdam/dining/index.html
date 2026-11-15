@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+/*sitenav*/
+.sitenav{background:#141b2b;color:#e8ebf0;font:600 13px/1.4 "Figtree","Segoe UI",system-ui,sans-serif}
+.sitenav a{color:#c9d3e2;text-decoration:none}
+.sitenav a:hover,.sitenav a:focus-visible{color:#fff}
+.sn-top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0 4px;padding:8px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+.sn-top b{font-family:"Gloock",Georgia,serif;font-weight:400;font-size:16px;color:#ffc2a8;margin-right:14px;padding-bottom:9px;white-space:nowrap}
+.sn-tab{padding:8px 16px 9px;border-radius:9px 9px 0 0;font-size:14px;white-space:nowrap}
+.sn-tab[aria-current]{background:#253049;color:#fff;box-shadow:inset 0 3px 0 #ffc2a8}
+.sn-sub{display:flex;flex-wrap:wrap;gap:4px 20px;padding:9px max(16px,env(safe-area-inset-right,0px)) 9px max(16px,env(safe-area-inset-left,0px));background:#253049}
+.sn-sub a{padding:2px 0;border-bottom:2px solid transparent}
+.sn-sub a[aria-current]{color:#fff;border-bottom-color:#ffc2a8}
+@media (max-width:520px){.sn-top b{flex-basis:100%;padding-bottom:4px}.sn-tab{padding-inline:12px}}
+@media print{.sitenav{display:none}}
+/*endsitenav*/
+</style>
+<title>Koningsdam Dining Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: ship dining guide in the Alaska family. Cover, quick-facts strip, a seven-night dinner plan, specialty then included venues as linked cards, Alaska food, bars, drinks & packages, costs, tips. */
+:root{
+  --paper:#f2f4f6; --card:#ffffff; --ink:#1b2333; --muted:#5a6476; --line:#d8dde5;
+  --navy:#1f5f99; --navy-soft:#e3edf7; --rose:#b8466a; --rose-soft:#f6e3ea;
+  --teal:#2b7a82; --teal-soft:#e0eff0; --gold:#a8701c; --gold-soft:#f7ecd9;
+  --f-display:"Gloock", "Georgia", "Times New Roman", serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"DM Mono", "Consolas", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){color-scheme:dark;
+    --paper:#10151e; --card:#18202c; --ink:#e8ebf0; --muted:#9ba5b5; --line:#2a3443;
+    --navy:#7fb2e6; --navy-soft:#1a2a3d; --rose:#ee8aa6; --rose-soft:#3a2230; --teal:#6cc2c8; --teal-soft:#183136; --gold:#e3ad5c; --gold-soft:#33291a;}
+}
+:root[data-theme="dark"]{color-scheme:dark;
+  --paper:#10151e; --card:#18202c; --ink:#e8ebf0; --muted:#9ba5b5; --line:#2a3443;
+  --navy:#7fb2e6; --navy-soft:#1a2a3d; --rose:#ee8aa6; --rose-soft:#3a2230; --teal:#6cc2c8; --teal-soft:#183136; --gold:#e3ad5c; --gold-soft:#33291a;}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:400;margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+a{color:var(--navy)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(20px, env(safe-area-inset-right, 0px))}
+.eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--rose)}
+
+.cover{position:relative;color:#fff;background:#1b2b40 url("/koningsdam/img/koningsdam-astoria-2023.jpg") center 60%/cover no-repeat}
+.cover::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(8,20,36,.6) 0%, rgba(8,20,36,.25) 45%, rgba(6,14,28,.86) 100%)}
+.cover .wrap{position:relative;padding-block:clamp(56px,10vw,130px) clamp(36px,6vw,70px);display:grid;gap:18px}
+.cover .eyebrow{color:#ffd3c2}
+.cover h1{font-size:clamp(2.8rem,8vw,5.6rem);color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.45);max-width:12ch}
+.cover h1 em{font-style:normal;color:#ffc2a8}
+.cover .lede{max-width:58ch;font-size:clamp(1.02rem,1.6vw,1.2rem);color:#eef4f8}
+.credit{position:absolute;right:max(12px, env(safe-area-inset-right, 0px));bottom:8px;font-size:.68rem;color:rgba(255,255,255,.75)}
+
+.glance{background:var(--card);border-bottom:1px solid var(--line)}
+.glance .wrap{display:grid;grid-template-columns:repeat(5,1fr)}
+.g{padding:18px 16px;border-right:1px solid var(--line);display:grid;gap:2px}
+.g:last-child{border-right:0}
+.g b{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.15}
+.g span{font-size:.8rem;color:var(--muted)}
+
+section{padding-block:clamp(44px,6vw,76px)}
+section.alt{background:var(--card);border-block:1px solid var(--line)}
+.sec-head{display:grid;gap:10px;margin-bottom:26px;max-width:70ch}
+.sec-head h2{font-size:clamp(1.9rem,4vw,2.7rem)}
+.sec-head p{color:var(--muted)}
+
+/* dinner plan */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.92rem}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;background:var(--paper)}
+tr:last-child td{border-bottom:0}
+td .day{font-family:var(--f-mono);font-size:.8rem;color:var(--navy);white-space:nowrap}
+td small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+td.num{font-family:var(--f-mono);text-align:right;white-space:nowrap}
+tr.bday td{background:var(--rose-soft)}
+tr.total td{font-weight:700;background:var(--navy-soft)}
+.pill{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.pill.d{background:var(--gold-soft);color:var(--gold)}
+.pill.b{background:var(--rose);color:var(--card)}
+
+/* venue cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.venue{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:12px;align-content:start}
+section.alt .venue{background:var(--paper);border-color:transparent}
+.venue.star{border:2px solid var(--gold)}
+.venue .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.venue h3{font-size:1.6rem}
+.venue h3 a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 30%,transparent);text-underline-offset:4px}
+.venue h3 a:hover{color:var(--navy)}
+.venue .price{font-family:var(--f-mono);font-size:1rem;color:var(--navy);white-space:nowrap}
+.venue .meta{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.72rem;font-weight:600;padding:2px 10px;border-radius:99px;background:var(--teal-soft);color:var(--teal);white-space:nowrap}
+.tag.g{background:var(--gold-soft);color:var(--gold)}
+.tag.r{background:var(--rose-soft);color:var(--rose)}
+.venue p{font-size:.92rem;color:var(--muted)}
+.venue .try{font-size:.88rem}
+.venue .try b{display:block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.venue .tip{font-size:.86rem;background:var(--gold-soft);border-radius:10px;padding:10px 12px;color:var(--ink)}
+.venue .go{justify-self:start;font-size:.84rem;font-weight:600;color:var(--navy);text-decoration:none}
+.venue .go:hover{text-decoration:underline}
+
+.alaska{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.alaska div{border-left:3px solid var(--teal);padding:4px 0 4px 14px;display:grid;gap:4px}
+.alaska b{font-size:1rem}
+.alaska p{font-size:.9rem;color:var(--muted)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+section.alt .panel{background:var(--paper);border-color:transparent}
+.panel h3{font-size:1.45rem;margin-bottom:10px}
+.bul li{font-size:.92rem;color:var(--muted);padding-left:16px;position:relative;margin-bottom:8px}
+.bul li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--navy)}
+.bul li b{color:var(--ink)}
+footer{padding-block:30px 44px;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted)}
+
+@media (max-width:900px){
+  .glance .wrap{grid-template-columns:repeat(2,1fr)}
+  .g{border-right:0;border-bottom:1px solid var(--line)}
+  .two{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<nav class="sitenav" aria-label="Site"><div class="sn-top"><b>Diane's 70th</b><a class="sn-tab" href="/">Eurodam</a><a class="sn-tab" href="/koningsdam/" aria-current="true">Koningsdam</a><a class="sn-tab" href="/finalists/">Comparisons</a></div><div class="sn-sub" aria-label="Koningsdam pages"><a href="/koningsdam/">Ship guide</a><a href="/koningsdam/ports/">Ports &amp; excursions</a><a href="/koningsdam/dining/" aria-current="page">Ship dining</a><a href="/koningsdam/planner/">Trip planner</a><a href="/koningsdam/trip/">Boston trip plan</a></div></nav>
+
+
+<header class="cover">
+  <div class="wrap">
+    <p class="eyebrow">Diane's 70th · Koningsdam · Aug 28 – Sep 4, 2027</p>
+    <h1>Dining on the <em>Koningsdam</em></h1>
+    <p class="lede">Every restaurant, café and bar on board: what to order, what it costs, when to go, and a dinner plan for all seven nights, starting with Mom's birthday dinner at the Pinnacle Grill as we sail out of Vancouver.</p>
+  </div>
+  <span class="credit">Koningsdam at Astoria, Oregon, 2023 · Matthew Groh, CC BY-SA 4.0</span>
+</header>
+
+<div class="glance"><div class="wrap">
+  <div class="g"><b>6 included</b><span>Dining Room, Lido Market, Grand Dutch Café, Dive-In, deli &amp; pizza, room service</span></div>
+  <div class="g"><b>5 specialty</b><span>Pinnacle Grill, Sel de Mer, Tamarind, Canaletto and a sushi bar, plus a Morimoto pop-up</span></div>
+  <div class="g"><b>+20%</b><span>Service charge on specialty dining and drinks</span></div>
+  <div class="g"><b>Smart casual</b><span>No shorts or tank tops at dinner</span></div>
+  <div class="g"><b>2 Dressy nights</b><span>Usually Sun Aug 29 and one later evening, often Fri Sep 3</span></div>
+</div></div>
+
+<main>
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Seven nights, seven dinners</p>
+      <h2>Our dinner plan</h2>
+      <p>A plan that works around the port times. The Koningsdam and her two sister ships have the most restaurants in Holland America's fleet, so this uses four of them and leaves three nights for the included dining. Prices are for all four of us, including the 20% service charge. Four paid dinners is generous; Canaletto is the easy one to drop. Book the specialty restaurants in Holland America's online planner before sailing.</p>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Night</th><th>Where</th><th>Why that night</th><th style="text-align:right">For four</th></tr></thead>
+      <tbody>
+        <tr class="bday"><td><span class="day">Sat Aug 28</span></td><td><b>Pinnacle Grill</b><span class="pill b">Diane's 70th</span><small>Book a 7:00 pm table before sailing</small></td><td>We sail from Vancouver at 3:00 pm, so the evening is free. Embarkation-night reservations made in advance get a <b>free bottle of sparkling wine</b>. Tell them it is a 70th and ask for a cake and a song.</td><td class="num">~$250</td></tr>
+        <tr><td><span class="day">Sun Aug 29</span></td><td><b>The Dining Room</b><span class="pill d">Dressy</span><small>Sea day</small></td><td>Usually the first Dressy night. Dress up and enjoy the main dining room's multi-course menu. Nothing to rush for.</td><td class="num">Included</td></tr>
+        <tr><td><span class="day">Mon Aug 30</span></td><td><b>Ashore in Juneau</b> or <b>The Dining Room</b><small>In port 1:30–10 pm · tour back about 7:30 pm</small></td><td>Lunch on board before the tour. Afterwards, king crab at Tracy's King Crab Shack by the dock (all aboard is 9:30 pm), or walk into the Dining Room, where open dining runs to about 9:00 pm.</td><td class="num">Varies</td></tr>
+        <tr><td><span class="day">Tue Aug 31</span></td><td><b>Canaletto</b><small>Skagway until 8 pm · book about 7:00 pm</small></td><td>A relaxed Italian night after the train and a full day in Skagway: pasta, short rib and tiramisù, with plates to share.</td><td class="num">~$120</td></tr>
+        <tr><td><span class="day">Wed Sep 1</span></td><td><b>Sel de Mer</b><small>Glacier Bay day · book about 6:30 pm</small></td><td>We leave Glacier Bay at 3:15 pm and there is no port that evening, so this is the one unhurried night at sea in mid-week. Give it to the French seafood brasserie the Eurodam does not have.</td><td class="num">~$264</td></tr>
+        <tr><td><span class="day">Thu Sep 2</span></td><td><b>Tamarind</b><small>Ketchikan until 7 pm · book about 7:00 pm</small></td><td>Our tour is back about 4:45 pm. Tamarind sits high at the back of the ship, a good place to watch Ketchikan slip away in the last light. If the <b>Morimoto by Sea</b> pop-up is announced for a night we are free, swap it in for this one.</td><td class="num">~$187<small>pop-up ~$264</small></td></tr>
+        <tr><td><span class="day">Fri Sep 3</span></td><td><b>The Dining Room</b><span class="pill d">Dressy</span><small>Last sea day</small></td><td>The farewell dinner, and usually the second Dressy night. No port to hurry back from, so take a later table and linger.</td><td class="num">Included</td></tr>
+        <tr class="total"><td colspan="3">Specialty dining for the week, all four of us</td><td class="num">≈ $820–900</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Worth the extra</p>
+      <h2>Specialty restaurants</h2>
+      <p>Prices are per person (2026) plus a 20% service charge. With the <b>Have It All</b> package, one specialty dinner each is included. Recent reviews say the specialty food on this ship is better than expected and costs well below what other cruise lines charge.</p>
+    </div>
+    <div class="cards">
+      <article class="venue star">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/pinnacle-grill" target="_blank" rel="noopener">Pinnacle Grill</a></h3><span class="price">$52 pp</span></div>
+        <div class="meta"><span class="tag">Steakhouse &amp; seafood</span><span class="tag">Deck 2</span><span class="tag">Lunch &amp; dinner</span><span class="tag g">Birthday pick</span></div>
+        <p>Holland America's signature steakhouse, with an Alaska regional menu on Alaska sailings. The March 2026 dry dock added movable tables, which makes a table for four easier to arrange.</p>
+        <p class="try"><b>Try</b>Table-side Caesar salad, clothesline candied bacon, jumbo lump crab cakes, American Wagyu strip loin or filet mignon, honey-glazed Chilean sea bass, and the "Not-So-Classic" Baked Alaska or the Jacques Torres chocolate soufflé.</p>
+        <p class="tip">Reserve for <b>embarkation night</b> before sailing for a complimentary bottle of sparkling wine. Lunch is about $25 on sea days.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/pinnacle-grill" target="_blank" rel="noopener">Menu &amp; reservations on Holland America ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/sel-de-mer" target="_blank" rel="noopener">Sel de Mer</a></h3><span class="price">$55 pp</span></div>
+        <div class="meta"><span class="tag">French seafood brasserie</span><span class="tag">Deck 2</span><span class="tag">Dinner</span><span class="tag r">About 54 seats</span></div>
+        <p>A small, permanent seafood restaurant found only on the Koningsdam and her two sister ships. Older reviews call it "Rudi's Sel de Mer"; it is the same place. A 2026 Alaska review singled out the chocolate hazelnut volcano.</p>
+        <p class="try"><b>Try</b>Baked escargots, steak tartare, whole Dover sole meunière, seafood cioppino, fruits de mer spaghetti, broiled lobster tail, and the salted caramel St. Honoré or the Jacques Torres chocolate hazelnut volcano.</p>
+        <p class="tip">It is the smallest restaurant on board, so book it early. It is also the dearest cover charge, which makes it the best use of a <b>Have It All</b> dinner.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/sel-de-mer" target="_blank" rel="noopener">Menu on Holland America ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/tamarind" target="_blank" rel="noopener">Tamarind</a></h3><span class="price">$39 pp</span></div>
+        <div class="meta"><span class="tag">Pan-Asian</span><span class="tag">Deck 10, aft</span><span class="tag">Dinner</span></div>
+        <p>High up at the back of the ship, Tamarind serves Southeast Asian, Chinese and Japanese dishes every night. The Tamarind Bar is next door for a drink before or after.</p>
+        <p class="try"><b>Try</b>Satay sampler, shrimp tempura, pork bao, wok-seared lobster, crispy duck, Panang red curry chicken, wasabi-soy beef tenderloin and the mango posset.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/tamarind" target="_blank" rel="noopener">Menu on Holland America ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/canaletto" target="_blank" rel="noopener">Canaletto</a></h3><span class="price">$25 pp</span></div>
+        <div class="meta"><span class="tag">Italian</span><span class="tag">Lido, Deck 9</span><span class="tag">Dinner</span></div>
+        <p>Relaxed Italian dinners in a section of the Lido Market, with pastas and small plates to share. The best value of the specialty restaurants. One 2026 reviewer praised the osso buco; another liked the lobster and shrimp ravioli.</p>
+        <p class="try"><b>Try</b>Veal and sage meatballs, burrata, grilled tiger shrimp, casarecce pesto Genovese, Chianti-braised short rib, tiramisù. Broiled lobster tails are +$19.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/canaletto" target="_blank" rel="noopener">Menu on Holland America ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/morimoto-by-sea" target="_blank" rel="noopener">Morimoto by Sea Sushi Bar</a></h3><span class="price">À la carte</span></div>
+        <div class="meta"><span class="tag">Sushi</span><span class="tag">Deck 10, beside Tamarind</span><span class="tag r">Only a few seats</span></div>
+        <p>A tiny sushi counter with Iron Chef Masaharu Morimoto's menu. It used to be called Nami Sushi, and some deck plans still say so. You pay per dish, plus 20%; Holland America does not publish the prices. A 2026 review praised the spicy lobster pad Thai.</p>
+        <p class="try"><b>Try</b>Toro tartare, tuna pizza, sticky ribs, angry lobster pad Thai, a poke bowl, nigiri and signature rolls, and the white chocolate lime ganache.</p>
+        <p class="tip">Good for a light sea-day supper or a few plates before a show, without committing to a full dinner.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/morimoto-by-sea" target="_blank" rel="noopener">About Morimoto by Sea ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/morimoto-by-sea-pop-up" target="_blank" rel="noopener">Morimoto by Sea pop-up</a></h3><span class="price">~$55 pp</span></div>
+        <div class="meta"><span class="tag">Japanese</span><span class="tag r">Pop-up, at least 1 night</span><span class="tag">In Tamarind or the Pinnacle Grill</span></div>
+        <p>A full Morimoto dinner menu that takes over Tamarind or the Pinnacle Grill at least once per cruise. On Alaska sailings it features fresh Alaska fish; past menus have included black cod yuzu and halibut XO.</p>
+        <p class="tip">The night is only announced on board. Check the Navigator app on day one and book right away.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/morimoto-by-sea-pop-up" target="_blank" rel="noopener">About the pop-up ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/lido-market" target="_blank" rel="noopener">Seafood Boil</a></h3><span class="price">~$35 pp</span></div>
+        <div class="meta"><span class="tag">Seafood</span><span class="tag r">Pop-up, check on board</span><span class="tag">Lido Market</span></div>
+        <p>A casual seafood feast of chowder, crab, clams, shrimp and mussels with a warm baked dessert, held in the Lido Market on some sailings. Messy and lots of fun for a group.</p>
+        <p class="tip">We could not confirm it for this ship or its 2027 price. If it shows up in the Navigator app, book early.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Included in the fare</p>
+      <h2>Everyday dining</h2>
+      <p>All of these are included at no extra charge (drinks aside), except where a card says otherwise.</p>
+    </div>
+    <div class="cards">
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/the-dining-room" target="_blank" rel="noopener">The Dining Room</a></h3><span class="price">Included</span></div>
+        <div class="meta"><span class="tag">Main restaurant</span><span class="tag">Decks 2–3, aft</span><span class="tag">Breakfast · lunch · dinner</span></div>
+        <p>A two-level room at the back of the ship, joined by a staircase, serving multi-course dinners with menus that change every night. Breakfast is served daily and lunch on sea days. Recent reviewers rate it good rather than the highlight of the ship.</p>
+        <p class="try"><b>Dinner times</b>Pick fixed seating (about 5:45 or 8:00 pm, the same table and waiters nightly) or open dining (about 5:15–9:00 pm) when you book. Exact times are set for each sailing. Open dining is easiest for a group of four with tours to work around.</p>
+        <p class="tip">One morning there's an <b>Alaska Brunch</b>: blueberry pancakes, salmon chowder, and a Kodiak steak and egg skillet.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/the-dining-room" target="_blank" rel="noopener">About The Dining Room ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/lido-market" target="_blank" rel="noopener">Lido Market</a></h3><span class="price">Included</span></div>
+        <div class="meta"><span class="tag">Buffet</span><span class="tag">Deck 9</span><span class="tag">~6 am – late</span></div>
+        <p>The big casual buffet, with stations for bread, salads, comfort food, world dishes, a carvery and desserts. Expect breakfast about 6–11 am, lunch 11:30–2, dinner 5:30–8 and late snacks after 9 pm. It's where lunch happens on boarding day.</p>
+        <p class="tip">Crew serve you at each station, so lines form at peak times, and some reviewers find the choice a bit repetitive. Go a little early or late. An Alaska <b>Salmon Bake</b> is held here once a cruise.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/lido-market" target="_blank" rel="noopener">About Lido Market ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/grand-dutch-cafe" target="_blank" rel="noopener">Grand Dutch Café</a></h3><span class="price">Food included</span></div>
+        <div class="meta"><span class="tag">Dutch café</span><span class="tag">Deck 3, Atrium</span><span class="tag g">Not on the Eurodam</span></div>
+        <p>The food is free and the drinks cost extra. Dutch pea soup, open-faced and herring sandwiches, Dutch pancakes and stroopwafels are complimentary; specialty coffees and 16 Dutch and Belgian beers (four on tap) are for purchase.</p>
+        <p class="tip">A good light lunch or mid-afternoon stop. It gets crowded on boarding day and at busy times.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/grand-dutch-cafe" target="_blank" rel="noopener">About the Grand Dutch Café ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/dive-in" target="_blank" rel="noopener">Dive-In</a></h3><span class="price">Included</span></div>
+        <div class="meta"><span class="tag">Burgers &amp; hot dogs</span><span class="tag">Deck 9, Lido pool</span><span class="tag">~11:30 am – 6 pm</span></div>
+        <p>Poolside grill under the Lido's glass roof, with burgers, Nathan's hot dogs and fries. You can order ahead in the Navigator app.</p>
+        <p class="try"><b>Try</b>The Cannonball or High-Dive burger, the Dunkin' Dog, and fries topped with Dive-In sauce.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/dive-in" target="_blank" rel="noopener">Dive-In menu ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/new-york-pizza" target="_blank" rel="noopener">New York Deli &amp; Pizza</a></h3><span class="price">Included</span></div>
+        <div class="meta"><span class="tag">Pizza &amp; sandwiches</span><span class="tag">Deck 10</span></div>
+        <p>Pizza made to order, plus deli sandwiches and salads, on the upper level overlooking the Lido pool.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/new-york-pizza" target="_blank" rel="noopener">About New York Deli &amp; Pizza ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/explorations-cafe" target="_blank" rel="noopener">Crow's Nest Café</a></h3><span class="price">Specialty coffee $</span></div>
+        <div class="meta"><span class="tag">Coffee &amp; pastries</span><span class="tag">Deck 12, forward</span></div>
+        <p>A coffee bar inside the Crow's Nest observation lounge at the top of the ship (formerly Explorations Café). Grab a latte and a window seat over the bow on Glacier Bay morning.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/explorations-cafe" target="_blank" rel="noopener">About the café ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/gelato" target="_blank" rel="noopener">Gelato &amp; Fresh Juice</a></h3><span class="price">Small charge</span></div>
+        <div class="meta"><span class="tag">Gelato &amp; smoothies</span><span class="tag">Deck 9, Lido pool</span></div>
+        <p>Italian gelato, juices and smoothies by the pool. Expect a small charge per scoop; check the price on board.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/gelato" target="_blank" rel="noopener">About Gelato ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/24-hour-in-room-dining" target="_blank" rel="noopener">Room service</a></h3><span class="price">Mostly included</span></div>
+        <div class="meta"><span class="tag">24 hours</span><span class="tag">To your cabin</span></div>
+        <p>Breakfast and the basic menu are free; some items carry a charge. Order breakfast the night before.</p>
+        <p class="tip">Order breakfast to the <b>balcony on Glacier Bay morning</b> (Wed Sep 1). The ship enters the park at 6:15 am, so ask for an early delivery and watch the bay open up.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/24-hour-in-room-dining" target="_blank" rel="noopener">About room service ↗</a>
+      </article>
+      <article class="venue">
+        <div class="top"><h3>Royal Dutch Tea</h3><span class="price">Included</span></div>
+        <div class="meta"><span class="tag">Sea days</span><span class="tag">About 3:00 pm</span><span class="tag">The Dining Room</span></div>
+        <p>Holland America's afternoon tea, with premium teas, scones, savory bites and Dutch-inspired sweets, served in the Dining Room on sea days. Ours are Sun Aug 29 and Fri Sep 3. The Lido Market also sets out a simpler tea about 3–4 pm.</p>
+        <p class="tip">It is popular, so go a little early.</p>
+      </article>
+      <article class="venue">
+        <div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/club-orange" target="_blank" rel="noopener">Club Orange</a></h3><span class="price">Paid upgrade</span></div>
+        <div class="meta"><span class="tag">Private dining room</span><span class="tag">Deck 2</span><span class="tag">Breakfast &amp; dinner</span></div>
+        <p>An optional programme you buy for the whole cruise. On this ship it comes with its own small restaurant, serving breakfast and dinner from an expanded Dining Room menu with no reservations. It is free for Neptune and Pinnacle Suite guests; for everyone else Holland America quotes the price when you ask.</p>
+        <p class="tip">We'd skip it. With four specialty dinners planned and open dining the rest of the week, we would hardly use it.</p>
+        <a class="go" href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/club-orange" target="_blank" rel="noopener">About Club Orange ↗</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Only in Alaska</p>
+      <h2>Alaska on the menu</h2>
+      <p>Holland America's fresh fish programme brings local fish from port to plate in under 48 hours, and its wild Alaska seafood is independently certified.</p>
+    </div>
+    <div class="alaska">
+      <div><b>Wild Alaska seafood</b><p>Salmon, halibut, cod and black cod appear across the menus all week, with dishes by Masaharu Morimoto among them.</p></div>
+      <div><b>Glacier Bay pea soup</b><p>Dutch split-pea soup served on deck while you watch the glaciers on Wed Sep 1. A beloved Holland America tradition.</p></div>
+      <div><b>Alaska Brunch and Salmon Bake</b><p>Each happens once per cruise: the brunch in The Dining Room, the salmon bake in the Lido Market.</p></div>
+      <div><b>Alaska cocktails</b><p>A list of Alaska cocktails created by bartender Sam Ross, including Glacial Ice cocktails on glacier day.</p></div>
+      <div><b>Local beer</b><p>Alaskan Brewing's Amber Ale, White Ale and Juneau Juice IPA, and Denali Brewing's Bachelor Brew lager, Twister Creek IPA and Single Engine Red (the 2026 list).</p></div>
+      <div><b>Live cooking shows</b><p>Alaska dishes cooked live on the World Stage, then served in The Dining Room that night.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Drinks</p>
+      <h2>Bars &amp; lounges</h2>
+      <p>Happy hour is usually 4–5 pm at select bars, typically the Ocean Bar and Billboard Onboard, with drinks at half price. Deck numbers are from the deck plans; a couple of small venues may have changed in the March 2026 dry dock, and we say so where that applies.</p>
+    </div>
+    <div class="cards">
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/crows-nest" target="_blank" rel="noopener">Crow's Nest</a></h3><span class="price">Deck 12</span></div><p>Windows right around the bow at the very top of the ship, the best indoor spot for glaciers. It has a bar, the café, games and puzzles, and it is busy most of the day, so claim seats early on Glacier Bay morning.</p></article>
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/ocean-bar" target="_blank" rel="noopener">Ocean Bar</a></h3><span class="price">Deck 2, Atrium</span></div><p>A cocktail lounge by the atrium with live music and a small dance floor. Meet here for a toast before the birthday dinner; the Pinnacle Grill is on the same deck.</p></article>
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining/grand-dutch-cafe" target="_blank" rel="noopener">Grand Dutch Café</a></h3><span class="price">Deck 3, Atrium</span></div><p>The place for a Dutch or Belgian beer, four of them on tap, with free Dutch snacks alongside.</p></article>
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/tamarind-bar" target="_blank" rel="noopener">Tamarind Bar</a></h3><span class="price">Deck 10, aft</span></div><p>Quiet, with ocean views, Asian-inspired cocktails and sake. Ideal before or after Tamarind, or for a nightcap.</p></article>
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/sea-view-bar" target="_blank" rel="noopener">Sea View Bar</a></h3><span class="price">Deck 9, aft</span></div><p>By the adults-only Sea View pool at the back of the ship. The best spot for the birthday sail-away toast as we leave Vancouver and pass under the Lions Gate Bridge. There is a smoking area nearby.</p></article>
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/billboard-onboard" target="_blank" rel="noopener">Billboard Onboard</a></h3><span class="price">Deck 2</span></div><p>Two pianists playing chart hits, sing-alongs and all-request sets. Ask them for "Happy Birthday" for Diane. More seating was added in 2026.</p></article>
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/rolling-stone-lounge" target="_blank" rel="noopener">Rolling Stone Lounge</a></h3><span class="price">Deck 2</span></div><p>A live band playing rock, pop and country, with a small dance floor. It is next door to Billboard Onboard, and new seating between the two lets you watch either.</p></article>
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/bb-kings-blues-club" target="_blank" rel="noopener">B.B. King's Blues Club</a></h3><span class="price">Decks 2–3</span></div><p>A Memphis blues and soul band in a two-level room with a big wooden dance floor, something the Eurodam does not have. The dance floor for the birthday night. Seats go quickly at busy times.</p></article>
+      <article class="venue"><div class="top"><h3><a href="https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/panorama-bar" target="_blank" rel="noopener">Lido Bar &amp; Panorama Bar</a></h3><span class="price">Decks 9 &amp; 10</span></div><p>The Lido Bar is poolside under the glass roof; the Panorama Bar is one level up, overlooking the pool. Handy with a burger or pizza.</p></article>
+      <article class="venue"><div class="top"><h3>Sun Bar &amp; Casino Bar</h3><span class="price">Decks 11 &amp; 3</span></div><p>The Sun Bar is an open-deck bar where smoking is allowed. The Casino Bar is inside the casino.</p></article>
+      <article class="venue"><div class="top"><h3>Notes &amp; BLEND</h3><span class="price">Check on board</span></div><p>Older guides list Notes, a whiskey bar between Billboard Onboard and the Rolling Stone Lounge, and BLEND, a ten-seat room on Deck 2 for a blend-your-own-wine class. That part of the ship was rebuilt in the March 2026 dry dock and Holland America no longer lists either, so check on board before counting on them.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap two">
+    <div class="panel">
+      <h3>Drink packages (per person, per day)</h3>
+      <ul class="bul">
+        <li><b><a href="https://www.hollandamerica.com/en/us/cruise-deals/have-it-all" target="_blank" rel="noopener">Have It All</a> · $65/day:</b> Signature drinks package (drinks up to $12, 15 a day), one specialty dinner, Surf Wi-Fi and up to $100 excursion credit. About $1,820 for all four of us for the week.</li>
+        <li><b><a href="https://www.hollandamerica.com/en/us/onboard-packages/beverage-packages" target="_blank" rel="noopener">Signature Beverage Package</a> · $55.95:</b> cocktails, wine, beer and specialty coffee up to $12 a drink.</li>
+        <li><b>Elite Beverage Package · $60.95:</b> the same, but drinks up to $16.</li>
+        <li><b>Quench (non-alcoholic) · from $17.95:</b> sodas, juices, specialty coffees and mocktails.</li>
+        <li>Every adult in a cabin must buy the same drinks package, and a 20% service charge applies to drinks. Room service and the minibar are not covered.</li>
+        <li><b>Tastings cost extra.</b> A beer tasting or mixology class was about $15 and a wine tasting about $25–39 in 2023; expect a little more now.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Tips for dining well</h3>
+      <ul class="bul">
+        <li><b>Book early.</b> Reserve the Pinnacle Grill for Aug 28 first, then Sel de Mer for Sep 1 (it is small), Tamarind for Sep 2 and Canaletto for Aug 31, in Holland America's online planner as soon as it opens.</li>
+        <li><b>The pop-up.</b> The Morimoto by Sea night is only announced on board. Look in the Navigator app on day one and move a booking if it suits us better.</li>
+        <li><b>Birthday.</b> Note Diane's 70th on the booking, tell the maître d' on day one, and order a cake through Holland America's gift shop.</li>
+        <li><b>Have It All.</b> If we buy it, each of us gets one specialty dinner at the Pinnacle Grill, Sel de Mer, Tamarind or Canaletto. Spend it on Sel de Mer or the Pinnacle Grill, not Canaletto.</li>
+        <li><b>Dress code.</b> Smart casual every night. Two "Dressy" nights call for a dress, or a collared shirt and slacks; jackets are optional. The nights are confirmed in the Navigator app once on board. <a href="https://www.hollandamerica.com/en/us/faq/cruise-planning/packaging-and-luggage/clothing" target="_blank" rel="noopener">Holland America's dress guide ↗</a></li>
+        <li><b>Dietary needs.</b> Allergies and special diets can be noted in advance. Tell the waiter on the first night too.</li>
+        <li><b>Port nights.</b> Juneau (until 10 pm) is the one night to eat late or ashore. Skagway sails at 8 pm and Ketchikan at 7 pm, so those dinners are on board.</li>
+        <li><b>Fitting it together.</b> The day-by-day timings are in our <a href="/koningsdam/planner/">trip planner</a>, and the rest of the ship is in the <a href="/koningsdam/">Koningsdam ship guide</a>.</li>
+        <li><b>More info.</b> <a href="https://www.hollandamerica.com/en/us/onboard-experiences/dining" target="_blank" rel="noopener">All Holland America dining ↗</a> · <a href="https://www.hollandamerica.com/en/us/faq/onboard-cruise-experience/dining/what-is-specialty-dining" target="_blank" rel="noopener">Specialty dining FAQ ↗</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">Menus, prices and venue details from Holland America's dining, bar and package pages (2026), plus recent Koningsdam reviews. Deck numbers are from published deck plans. Menus, prices and opening times change, so check Holland America's site before sailing and the Navigator app on board. Photo: Koningsdam at Astoria, Oregon, 2023, by Matthew Groh, CC BY-SA 4.0, via Wikimedia Commons.</div>
+</footer>
+
+<script>
+/* Site-wide auto-linker: turns mentions of hotels, restaurants, attractions, ships, airlines
+   and ports into links. Runs on load and again whenever a page re-renders (e.g. filters). */
+(() => {
+  const LINKS = [
+    ["Juneau", "/koningsdam/juneau/"],
+    ["Skagway", "/koningsdam/skagway/"],
+    ["Glacier Bay", "/koningsdam/glacier-bay/"],
+    ["Ketchikan", "/koningsdam/ketchikan/"],
+    ["Eurodam", "/"],
+    ["Koningsdam", "https://www.hollandamerica.com/en/us/cruise-ships/koningsdam"],
+    ["Pan Pacific Vancouver", "https://www.panpacific.com/en/hotels-and-resorts/pp-vancouver.html"],
+    ["Pan Pacific", "https://www.panpacific.com/en/hotels-and-resorts/pp-vancouver.html"],
+    ["Fairmont Waterfront", "https://www.fairmont.com/en/hotels/vancouver/fairmont-waterfront.html"],
+    ["Fairmont Pacific Rim", "https://www.fairmont.com/en/hotels/vancouver/fairmont-pacific-rim.html"],
+    ["Fairmont Hotel Vancouver", "https://www.fairmont.com/en/hotels/vancouver/fairmont-hotel-vancouver.html"],
+    ["Rosewood Hotel Georgia", "https://www.rosewoodhotels.com/en/hotel-georgia-vancouver"],
+    ["Wedgewood Hotel", "https://www.wedgewoodhotel.com/"],
+    ["EXchange Hotel", "https://www.exchangehotelvan.com/"],
+    ["Pinnacle Hotel Harbourfront", "https://www.pinnacleharbourfronthotel.com/"],
+    ["Days Inn by Wyndham Vancouver Downtown", "https://www.daysinnvancouver.com/"],
+    ["Coast Coal Harbour", "https://www.coasthotels.com/coast-coal-harbour-vancouver-hotel-by-apa"],
+    ["Fairmont Vancouver Airport", "https://www.fairmont.com/en/hotels/vancouver/fairmont-vancouver-airport.html"],
+    ["Five Sails", "https://www.fivesails.ca/"],
+    ["Miku", "https://mikurestaurant.com/"],
+    ["Botanist", "https://www.botanistrestaurant.com/"],
+    ["Blue Water Cafe", "https://www.bluewatercafe.net/"],
+    ["Teahouse in Stanley Park", "https://www.vancouverdine.com/teahouse"],
+    ["Cardero's", "https://www.vancouverdine.com/carderos"],
+    ["Cactus Club Cafe", "https://www.cactusclubcafe.com/location/coal-harbour/"],
+    ["Canada Place", "https://www.canadaplace.ca/"],
+    ["FlyOver", "https://www.flyovercanada.com/"],
+    ["Vancouver Lookout", "https://vancouverlookout.com/"],
+    ["Stanley Park", "https://vancouver.ca/parks-recreation-culture/stanley-park.aspx"],
+    ["Vancouver Aquarium", "https://www.vanaqua.org/"],
+    ["Granville Island", "https://granvilleisland.com/"],
+    ["Aquabus", "https://theaquabus.com/"],
+    ["Gastown", "https://gastown.org/"],
+    ["Capilano Suspension Bridge Park", "https://www.capbridge.com/"],
+    ["Dr. Sun Yat-Sen Classical Chinese Garden", "https://vancouverchinesegarden.com/"],
+    ["Canada Line", "https://www.translink.ca/schedules-and-maps/skytrain"],
+    ["Air Canada", "https://www.aircanada.com/"],
+    ["Sel de Mer", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/sel-de-mer"],
+    ["Canaletto", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/canaletto"],
+    ["Morimoto by Sea", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/morimoto-by-sea"],
+    ["Grand Dutch Café", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/grand-dutch-cafe"],
+    ["Grand Dutch Cafe", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/grand-dutch-cafe"],
+    ["Club Orange", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/club-orange"],
+    ["Lido Market", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/lido-market"],
+    ["Crow's Nest", "https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/crows-nest"],
+    ["Ocean Bar", "https://www.hollandamerica.com/en/us/onboard-experiences/bars-and-lounges/ocean-bar"],
+    ["World Stage", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/world-stage"],
+    ["B.B. King's Blues Club", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/bb-kings-blues-club"],
+    ["Greenhouse Spa", "https://www.hollandamerica.com/en/us/onboard-experiences/activities/greenhouse-spa-salon"],
+    ["Red Onion Saloon", "https://www.redonion1898.com/"],
+    ["Days of '98 Show", "https://thedaysof98show.com"],
+    ["Skagway Museum", "https://www.skagway.org/museum"],
+    ["Icy Strait Point", "/icy-strait/"],
+    ["Sitka", "/sitka/"],
+    ["OpenTable", "https://www.opentable.com/"],
+    ["Tock", "https://www.exploretock.com/"],
+    ["Google Flights", "https://www.google.com/travel/flights"],
+    ["Alaska Airlines", "https://www.alaskaair.com/"],
+    ["Delta", "https://www.delta.com/"],
+    ["JetBlue", "https://www.jetblue.com/"],
+    ["Holland America Line", "https://www.hollandamerica.com/"],
+    ["Holland America", "https://www.hollandamerica.com/"],
+    ["Zaandam", "https://www.hollandamerica.com/en/us/cruise-ships/zaandam"],
+    ["Princess Cruises", "https://www.princess.com/"],
+    ["Royal Princess", "https://www.princess.com/ships-and-experience/ships/rp-royal-princess/"],
+    ["Crown Princess", "https://www.princess.com/ships-and-experience/ships/kp-crown-princess/"],
+    ["Coral Princess", "https://www.princess.com/ships-and-experience/ships/co-coral-princess/"],
+    ["Star Princess", "https://www.princess.com/ships-and-experience/ships/st-star-princess/"],
+    ["Norwegian Cruise Line", "https://www.ncl.com/"],
+    ["Norwegian Encore", "https://www.ncl.com/cruise-ships/norwegian-encore"],
+    ["Norwegian Bliss", "https://www.ncl.com/cruise-ships/norwegian-bliss"],
+    ["Celebrity Cruises", "https://www.celebritycruises.com/"],
+    ["Celebrity Edge", "https://www.celebritycruises.com/cruise-ships/celebrity-edge"],
+    ["Royal Caribbean", "https://www.royalcaribbean.com/"],
+    ["Voyager of the Seas", "https://www.royalcaribbean.com/cruise-ships/voyager-of-the-seas"],
+    ["Disney Cruise Line", "https://disneycruise.disney.go.com/"],
+    ["Disney Wonder", "https://disneycruise.disney.go.com/ships/wonder/"],
+    ["Viking Orion", "https://www.vikingcruises.com/oceans/ships/viking-orion.html"],
+    ["Viking", "https://www.vikingcruises.com/"],
+    ["Pinnacle Grill", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/pinnacle-grill"],
+    ["Tamarind", "https://www.hollandamerica.com/en/us/onboard-experiences/dining/tamarind"],
+    ["Rolling Stone Lounge", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/rolling-stone-lounge"],
+    ["Billboard Onboard", "https://www.hollandamerica.com/en/us/onboard-experiences/entertainment/billboard-onboard"],
+    ["Have It All", "https://www.hollandamerica.com/en/us/cruise-deals/have-it-all"],
+    ["Glacier Bay National Park", "https://www.nps.gov/glba/"],
+    ["Mendenhall Glacier", "https://www.fs.usda.gov/r10/tongass/offices/mendenhall-glacier-visitor-center"],
+    ["Mendenhall", "https://www.fs.usda.gov/r10/tongass/offices/mendenhall-glacier-visitor-center"],
+    ["Glacier Gardens", "https://www.glaciergardens.com/"],
+    ["Goldbelt Tram", "https://goldbelttram.com/"],
+    ["Mount Roberts Tramway", "https://goldbelttram.com/"],
+    ["Mount Roberts", "https://goldbelttram.com/"],
+    ["Alaska State Museum", "https://museums.alaska.gov/"],
+    ["Taku Lodge", "https://www.takulodge.com/"],
+    ["Tracy's King Crab Shack", "https://www.kingcrabshack.com/"],
+    ["Red Dog Saloon", "https://www.reddogsaloon.com/"],
+    ["Fortress of the Bear", "https://www.fortressofthebear.org/"],
+    ["Alaska Raptor Center", "https://alaskaraptor.org/"],
+    ["Raptor Center", "https://alaskaraptor.org/"],
+    ["Sitka National Historical Park", "https://www.nps.gov/sitk/"],
+    ["Sheldon Jackson Museum", "https://museums.alaska.gov/sheldon_jackson/"],
+    ["Sitka Sound Science Center", "https://sitkascience.org/"],
+    ["New Archangel Dancers", "https://www.newarchangeldancers.com/"],
+    ["Visit Sitka", "https://www.visitsitka.org/"],
+    ["Totem Heritage Center", "http://ketchikanmuseums.org/"],
+    ["Great Alaskan Lumberjack Show", "https://www.alaskanlumberjackshow.com/"],
+    ["Misty Fjords", "https://www.fs.usda.gov/recarea/tongass/recarea/?recid=79428"],
+    ["White Pass & Yukon Route", "https://wpyr.com/"],
+    ["White Pass", "https://wpyr.com/"],
+    ["Klondike Gold Rush National Historical Park", "https://www.nps.gov/klgo/"],
+    ["Butchart Gardens", "https://www.butchartgardens.com/"],
+    ["Butchart", "https://www.butchartgardens.com/"],
+    ["Fairmont Empress", "https://www.fairmont.com/empress-victoria/"],
+    ["Craigdarroch Castle", "https://thecastle.ca/"],
+    ["Alaska Wildlife Conservation Center", "https://www.alaskawildlife.org/"],
+    ["Denali", "https://www.nps.gov/dena/"],
+    ["Capilano Suspension Bridge", "https://www.capbridge.com/"]
+  ];
+  const here = location.pathname.replace(/index\.html$/, "");
+  const items = LINKS.filter(([, u]) => u !== here).sort((a, b) => b[0].length - a[0].length);
+  const url = new Map(items);
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(items.map(([p]) => esc(p)).join("|"), "g");
+  const isWord = c => !!c && /[A-Za-z0-9À-ÿ]/.test(c);
+  const SKIP = "a,button,script,style,title,h1,h2,nav,figcaption,textarea,select,option,label,footer,.credit,.credit2,.photo-credit,.filters,.jump,.sitenav,.portnav,[data-nolink]";
+  const BLOCK = "p,li,td,th,dd,dt,h3,h4,figure,blockquote";
+  const done = new WeakMap();
+
+  function linkify(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: n => (!n.nodeValue.trim() || !n.parentElement || n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    for (const node of nodes) {
+      const text = node.nodeValue;
+      re.lastIndex = 0;
+      if (!re.test(text)) continue;
+      const block = node.parentElement.closest(BLOCK) || node.parentElement.closest("div,section,article") || document.body;
+      let used = done.get(block); if (!used) done.set(block, used = new Set());
+      const frag = document.createDocumentFragment();
+      let last = 0, changed = false, m;
+      re.lastIndex = 0;
+      while ((m = re.exec(text))) {
+        const p = m[0], s = m.index, e = s + p.length;
+        if (isWord(text[s - 1]) || isWord(text[e]) || used.has(p)) continue;
+        const href = url.get(p);
+        used.add(p); changed = true;
+        frag.append(text.slice(last, s));
+        const a = document.createElement("a");
+        a.href = href; a.textContent = p; a.className = "autolink";
+        if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener"; }
+        frag.append(a);
+        last = e;
+      }
+      if (!changed) continue;
+      frag.append(text.slice(last));
+      node.replaceWith(frag);
+    }
+  }
+  const style = document.createElement("style");
+  style.textContent = "a.autolink{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent)}a.autolink:hover,a.autolink:focus-visible{text-decoration-color:currentColor;text-decoration-thickness:2px}";
+  document.head.append(style);
+  const run = () => linkify(document.body);
+  let t; const obs = new MutationObserver(() => { clearTimeout(t); t = setTimeout(run, 60); });
+  const start = () => { run(); obs.observe(document.body, { childList: true, subtree: true }); };
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", start) : start();
+})();
+
+</script>
+</body>
+</html>
