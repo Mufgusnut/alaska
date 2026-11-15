@@ -9,11 +9,20 @@
 body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 img{max-width:100%}
 [hidden]{display:none!important}
-.sitenav{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;padding:10px max(16px,env(safe-area-inset-left,0px));background:#141b2b;color:#e8ebf0;font:600 13px/1.4 "Figtree","Segoe UI",system-ui,sans-serif}
-.sitenav b{font-family:"Gloock",Georgia,serif;font-weight:400;font-size:16px;color:#ffc2a8;margin-right:6px}
-.sitenav a{color:#c9d3e2;text-decoration:none;padding:2px 0;border-bottom:2px solid transparent}
+/*sitenav*/
+.sitenav{background:#141b2b;color:#e8ebf0;font:600 13px/1.4 "Figtree","Segoe UI",system-ui,sans-serif}
+.sitenav a{color:#c9d3e2;text-decoration:none}
 .sitenav a:hover,.sitenav a:focus-visible{color:#fff}
-.sitenav a[aria-current]{color:#fff;border-bottom-color:#ffc2a8}
+.sn-top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0 4px;padding:8px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+.sn-top b{font-family:"Gloock",Georgia,serif;font-weight:400;font-size:16px;color:#ffc2a8;margin-right:14px;padding-bottom:9px;white-space:nowrap}
+.sn-tab{padding:8px 16px 9px;border-radius:9px 9px 0 0;font-size:14px;white-space:nowrap}
+.sn-tab[aria-current]{background:#253049;color:#fff;box-shadow:inset 0 3px 0 #ffc2a8}
+.sn-sub{display:flex;flex-wrap:wrap;gap:4px 20px;padding:9px max(16px,env(safe-area-inset-right,0px)) 9px max(16px,env(safe-area-inset-left,0px));background:#253049}
+.sn-sub a{padding:2px 0;border-bottom:2px solid transparent}
+.sn-sub a[aria-current]{color:#fff;border-bottom-color:#ffc2a8}
+@media (max-width:520px){.sn-top b{flex-basis:100%;padding-bottom:4px}.sn-tab{padding-inline:12px}}
+@media print{.sitenav{display:none}}
+/*endsitenav*/
 </style>
 <title>Diane's 70th Voyage Guide</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -247,7 +256,7 @@ footer .wrap{display:grid;gap:10px}
 </style>
 </head>
 <body>
-<nav class="sitenav" aria-label="Trip pages"><b>Diane's 70th</b><a href="/ports/">Ports & excursions</a><a href="/dining/">Ship dining</a><a href="/planner/">Trip planner</a><a href="/" aria-current="page">The Eurodam guide</a><a href="/trip/">Boston trip plan</a><a href="/finalists/">The 4 finalists</a><a href="/options/">All 13 options</a></nav>
+<nav class="sitenav" aria-label="Site"><div class="sn-top"><b>Diane's 70th</b><a class="sn-tab" href="/" aria-current="true">Eurodam</a><a class="sn-tab" href="/koningsdam/">Koningsdam</a><a class="sn-tab" href="/finalists/">Comparisons</a></div><div class="sn-sub" aria-label="Eurodam pages"><a href="/" aria-current="page">Ship guide</a><a href="/ports/">Ports &amp; excursions</a><a href="/dining/">Ship dining</a><a href="/planner/">Trip planner</a><a href="/trip/">Boston trip plan</a></div></nav>
 
 
 <header class="cover">
